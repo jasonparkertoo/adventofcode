@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestA(t *testing.T) {
+func Test_Day8_A(t *testing.T) {
 	scan, err := ReadLines(Example, "day8")
 	if err != nil {
 		panic("unable to find input data")
@@ -20,7 +20,7 @@ func TestA(t *testing.T) {
 	assert.Equal(t, expected, actual)
 }
 
-func TestB(t *testing.T) {
+func Test_Day8_B(t *testing.T) {
 	scan, err := ReadLines(Challenge, "day8")
 	if err != nil {
 		panic("unable to find input data")
@@ -33,7 +33,7 @@ func TestB(t *testing.T) {
 	assert.Equal(t, expected, actual)
 }
 
-func TestC(t *testing.T) {
+func Test_Day8_C(t *testing.T) {
 	scan, err := ReadLines(Example, "day8")
 	if err != nil {
 		panic("unable to find input data")
@@ -46,7 +46,7 @@ func TestC(t *testing.T) {
 	assert.Equal(t, expected, actual)
 }
 
-func TestD(t *testing.T) {
+func Test_Day8_D(t *testing.T) {
 	scan, err := ReadLines(Challenge, "day8")
 	if err != nil {
 		panic("unable to find input data")
