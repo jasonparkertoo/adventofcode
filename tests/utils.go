@@ -21,7 +21,13 @@ func ReadLines(part PartName, fileName string) ([]string, error) {
 	if err != nil {
 		panic(err.Error())
 	}
-	defer f.Close()
+	
+	defer func(f *os.File) {
+		err := f.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(f)
 
 	sc := bufio.NewScanner(f)
 
