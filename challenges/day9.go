@@ -16,7 +16,7 @@ type Harddrive struct {
 func ChecksumHarddrive(hd Harddrive) int {
 	blocks := blocks(hd)
 	compacted := compact(blocks)
-	checksum := ChecksumBlocks(compacted)
+	checksum := Checksum(compacted)
 	return checksum
 }
 
@@ -84,7 +84,7 @@ func compact(b []Block) []Block {
 	return append(result, Block{current, count})
 }
 
-func ChecksumBlocks(blocks []Block) int {
+func Checksum(blocks []Block) int {
 	sum, pos := 0, 0
 	for _, b := range blocks {
 		if b.IsFree() {
