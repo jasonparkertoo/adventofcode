@@ -31,7 +31,7 @@ func Test_Day9_A(t *testing.T) {
 	hd := c.Harddrive{DataMap: exampleData[0]}
 
 	expected := 1928
-	actual := c.ChecksumHarddrive(hd)
+	actual := c.ChecksumHarddrive(hd, c.CompactNormal)
 
 	assert.Equal(t, expected, actual, "expected %s, got %d", expected, actual)
 }
@@ -40,7 +40,25 @@ func Test_Day9_B(t *testing.T) {
 	hd := c.Harddrive{DataMap: challengeData[0]}
 
 	expected := 6262891638328
-	actual := c.ChecksumHarddrive(hd)
+	actual := c.ChecksumHarddrive(hd, c.CompactNormal)
+
+	assert.Equal(t, expected, actual, "expected %s, got %d", expected, actual)
+}
+
+func Test_Day9_C(t *testing.T) {
+	hd := c.Harddrive{DataMap: exampleData[0]}
+
+	expected := 2858
+	actual := c.ChecksumHarddrive(hd, c.CompactLeft)
+
+	assert.Equal(t, expected, actual, "expected %s, got %d", expected, actual)
+}
+
+func Test_Day9_D(t *testing.T) {
+	hd := c.Harddrive{DataMap: challengeData[0]}
+
+	expected := 6287317016845
+	actual := c.ChecksumHarddrive(hd, c.CompactLeft)
 
 	assert.Equal(t, expected, actual, "expected %s, got %d", expected, actual)
 }
