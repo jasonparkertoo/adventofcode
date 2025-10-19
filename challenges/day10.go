@@ -5,7 +5,6 @@ type Point struct{ R, C int }
 type LavaTrails struct {
 	grid      [][]int
 	rows,cols int
-	memo      map[Point]map[Point]struct{}
 }
 
 func NewLavaTrails(lines []string) *LavaTrails {
@@ -22,7 +21,6 @@ func NewLavaTrails(lines []string) *LavaTrails {
 		grid: grid,
 		rows: rows,
 		cols: cols,
-		memo: make(map[Point]map[Point]struct{}),
 	}
 }
 
@@ -53,9 +51,9 @@ func neighbors(t *LavaTrails, p Point) []Point {
 	return out
 }
 
-func reachableNines(t *LavaTrails, p Point) map[Point]struct{} {
+func reachableNines(t *LavaTrails, p Point, memo map[Point]map[Point]struct{}) map[Point]struct{} {
 	// READ: return clone so caller can't mutate memo
-	if got, ok := t.memo[p]; ok {
+	if got, ok := memo[p]; ok {
 		return cloneSet(got)
 	}
 
@@ -67,7 +65,7 @@ func reachableNines(t *LavaTrails, p Point) map[Point]struct{} {
 		res = make(map[Point]struct{})
 		for _, n := range neighbors(t, p) {
 			if height(t, n) == h+1 {
-				child := reachableNines(t, n)
+				child := reachableNines(t, n, memo)
 				for q := range child {
 					res[q] = struct{}{}
 				}
@@ -77,7 +75,7 @@ func reachableNines(t *LavaTrails, p Point) map[Point]struct{} {
 
 	// WRITE: freeze a clone to memo
 	frozen := cloneSet(res)
-	t.memo[p] = frozen
+	memo[p] = frozen
 	// RETURN: return a fresh clone so caller can't mutate our stored one
 	return cloneSet(frozen)
 }
@@ -119,12 +117,13 @@ func TotalTrailheadRating(t *LavaTrails) int {
 }
 
 func TotalTrailheadScore(t *LavaTrails) int {
+	memo := make(map[Point]map[Point]struct{})
 	sum := 0
 	for r := 0; r < t.rows; r++ {
 		for c := 0; c < t.cols; c++ {
 			p := Point{r, c}
 			if height(t, p) == 0 {
-				sum += len(reachableNines(t, p))
+				sum += len(reachableNines(t, p, memo))
 			}
 		}
 	}
