@@ -30,3 +30,23 @@ func TestB(t *testing.T) {
 	
 	assert.Equal(t, expected, actual, "expected %d, have %d", expected, actual)	
 }
+
+func TestC(t *testing.T) {
+	lines, _ := ReadLines(Example, Day)
+	lavaTrails := c.NewLavaTrails(lines)
+	
+	expected := 81
+	actual := c.TotalTrailheadRating(lavaTrails)
+	
+	assert.Equal(t, expected, actual, "expected %d, have %d", expected, actual)	
+}
+
+func TestD(t *testing.T) {
+	lines, _ := ReadLines(Challenge, Day)
+	lavaTrails := c.NewLavaTrails(lines)
+	
+	expected := 1657
+	actual := c.TotalTrailheadRating(lavaTrails)
+	
+	assert.Equal(t, expected, actual, "expected %d, have %d", expected, actual)	
+}

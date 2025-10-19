@@ -82,6 +82,42 @@ func reachableNines(t *LavaTrails, p Point) map[Point]struct{} {
 	return cloneSet(frozen)
 }
 
+func countPaths(t *LavaTrails, p Point, memo map[Point]int) int {
+    if val, exists := memo[p]; exists {
+        return val
+    }
+
+    h := height(t, p)
+    var count int
+    if h == 9 {
+        count = 1
+    } else {
+        count = 0
+        for _, n := range neighbors(t, p) {
+            if height(t, n) == h+1 {
+                count += countPaths(t, n, memo)
+            }
+        }
+    }
+
+    memo[p] = count
+    return count
+}
+
+func TotalTrailheadRating(t *LavaTrails) int {
+    sum := 0
+    for r := 0; r < t.rows; r++ {
+        for c := 0; c < t.cols; c++ {
+            p := Point{r, c}
+            if height(t, p) == 0 {
+                memo := make(map[Point]int)
+                sum += countPaths(t, p, memo)
+            }
+        }
+    }
+    return sum
+}
+
 func TotalTrailheadScore(t *LavaTrails) int {
 	sum := 0
 	for r := 0; r < t.rows; r++ {
