@@ -11,7 +11,7 @@ const (
 	Day string = "day10"
 )
 
-func TestA(t *testing.T) {
+func Test_Day10_A(t *testing.T) {
 	lines, _ := ReadLines(Example, Day)
 	lavaTrails := c.NewLavaTrails(lines)
 	
@@ -21,7 +21,7 @@ func TestA(t *testing.T) {
 	assert.Equal(t, expected, actual, "expected %d, have %d", expected, actual)	
 }
 
-func TestB(t *testing.T) {
+func Test_Day10_B(t *testing.T) {
 	lines, _ := ReadLines(Challenge, Day)
 	lavaTrails := c.NewLavaTrails(lines)
 	
@@ -31,7 +31,7 @@ func TestB(t *testing.T) {
 	assert.Equal(t, expected, actual, "expected %d, have %d", expected, actual)	
 }
 
-func TestC(t *testing.T) {
+func Test_Day10_C(t *testing.T) {
 	lines, _ := ReadLines(Example, Day)
 	lavaTrails := c.NewLavaTrails(lines)
 	
@@ -41,7 +41,7 @@ func TestC(t *testing.T) {
 	assert.Equal(t, expected, actual, "expected %d, have %d", expected, actual)	
 }
 
-func TestD(t *testing.T) {
+func Test_Day10_D(t *testing.T) {
 	lines, _ := ReadLines(Challenge, Day)
 	lavaTrails := c.NewLavaTrails(lines)
 	
