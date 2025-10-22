@@ -16,10 +16,6 @@ func numberOfDigits(n int64) int {
 	return d
 }
 
-func hasEvenNumOfDigits(num int64) bool {
-	return numberOfDigits(num)%2 == 0
-}
-
 func powerOfTen(n int) int64 {
 	half := n / 2
 	var p int64 = 1
