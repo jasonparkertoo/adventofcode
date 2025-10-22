@@ -1,71 +1,72 @@
 package challenges
 
-import (
-	"strconv"
-	"strings"
-)
 
-func isZero(n string) bool {
-	return n == "0"
-}
-
-func hasEvenNumberOfDigits(n string) bool {
-	return len(n)%2 == 0
-}
-
-var strArrToString = func(strs []string) string {
-	out := ""
-	for _, s := range strs {
-		out += s
+func numberOfDigits(n int64) int {
+	if n == 0 {
+		return 1
 	}
+	if n < 0 {
+		n = -n
+	}
+	d := 0
+	for n > 0 {
+		n /= 10
+		d++
+	}
+	return d
+}
+
+func hasEvenNumOfDigits(num int64) bool {
+	return numberOfDigits(num)%2 == 0
+}
+
+func powerOfTen(n int) int64 {
+	half := n / 2
+	var p int64 = 1
+	for range half {
+		p *= 10
+	}
+	return p
+}
+
+func processNumber(n int64) (left, right int64) {
+	if n == 0 {
+		return 1, -1
+	}
+	d := numberOfDigits(n)
+	if d%2 == 0 {
+		p := powerOfTen(d)
+		return n / p, n % p
+	}
+	return n * 2024, -1
+}
+
+func blink(n, depth int64, memo map[[2]int64]int64) int64 {
+	key := [2]int64{n, int64(depth)}
+	if v, ok := memo[key]; ok {
+		return v
+	}
+	if depth == 0 {
+		return 1
+	}
+
+	l, r := processNumber(n)
+	var out int64
+	if r == -1 {
+		out = blink(l, depth-1, memo)
+	} else {
+		out = blink(l, depth-1, memo) + blink(r, depth-1, memo)
+	}
+
+	memo[key] = out
 	return out
 }
 
-func splitPebble(p string) (left, right int64) {
-	parts := strings.Split(p, "")
-	mid := len(parts) / 2
-	l, _ := strconv.ParseInt(strArrToString(parts[0:mid]), 10, 64)
-	r, _ := strconv.ParseInt(strArrToString(parts[mid:]), 10, 64)
-
-	left = int64(l)
-	right = int64(r)
-
-	return
-}
-
-func Blink(numbers string) string {
-	numStrs := strings.Split(numbers, " ")
-
-	out := ""
-	for i := range numStrs {
-		if len(out) > 1 {
-			out += " "
-		}
-
-		str := numStrs[i]
-		if isZero(str) {
-			out += "1"
-		} else if hasEvenNumberOfDigits(str) {
-			l, r := splitPebble(str)
-			out += strconv.FormatInt(l, 10)
-			out += " "
-			out += strconv.FormatInt(r, 10)
-		} else {
-			n, _ := strconv.ParseInt(str, 10, 64)
-			out += strconv.FormatInt(n*2024, 10)
-		}
+func NumberOfStones(depth int64, nums []int64) int64 {
+	memo := make(map[[2]int64]int64)
+	var total int64
+	for _, n := range nums {
+		total += blink(n, depth, memo)
 	}
-	return out
-}
-
-func countStones(stones string) int {
-	return len(strings.Split(stones, " "))
-}
-
-func NumberOfStones(n int, numbers string) int {
-	result := numbers
-	for _ = range n {
-		result = Blink(result)
-	}
-	return countStones(result)
+	return total
 }
