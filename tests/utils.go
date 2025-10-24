@@ -33,7 +33,11 @@ func ReadLines(part PartName, fileName string) ([]string, error) {
 
 	var lines []string
 	for sc.Scan() {
-		lines = append(lines, sc.Text())
+		line := sc.Text()
+		if line == "" {
+			continue
+		}
+		lines = append(lines, line)
 	}
 	return lines, nil
 }
