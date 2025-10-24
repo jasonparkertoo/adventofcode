@@ -50,7 +50,7 @@ func Test_Day11_B(t *testing.T) {
 }
 
 func Test_Day11_C(t *testing.T) {
-	var expected int64 = 202019
+	var expected int64 = 239321955280205
 	actual := challenges.NumberOfStones(75, ChallengeData)
 	assert.Equal(t, expected, actual)
 }
