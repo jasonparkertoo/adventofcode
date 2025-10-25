@@ -22,7 +22,7 @@ func Test_Day12_A(t *testing.T) {
 }
 
 func Test_Day12_B(t *testing.T) {
-	expected := 1930
+	expected := 1451030
 	actual := c.CalculateTotalPrice(Day12ChallengeData)
 	assert.Equal(t, expected, actual, "expected %d, actual %d", expected, actual)
 }
