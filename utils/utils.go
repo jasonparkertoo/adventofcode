@@ -95,3 +95,8 @@ func (d Data) Line(n int) (string, error) {
 func (d Data) Formatted(fn func([]string) any) any {
 	return fn(d.lines)
 }
+
+type Result struct {
+	Example   int
+	Challenge int
+}
