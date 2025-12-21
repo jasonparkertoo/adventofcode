@@ -11,37 +11,31 @@ var y2025ExampleData = utils.NewData(utils.Example, utils.Year2025)
 var y2025ChallengeData = utils.NewData(utils.Challenge, utils.Year2025)
 
 func TestDay3A(t *testing.T) {
-	results := TotalOutputVoltage(y2025ExampleData)
-	
-	expected := 357
-	actual := results[0]
+	var expected int64 = 357
+	actual := TotalOutputJoltage(y2025ExampleData, 2)
 	
 	assert.Equal(t, expected, actual)
 }
 
 func TestDay3B(t *testing.T) {
-	results := TotalOutputVoltage(y2025ChallengeData)
-	
-	expected := 17376
-	actual := results[0]
+	var expected int64 = 17376
+	actual := TotalOutputJoltage(y2025ChallengeData, 2)
 	
 	assert.Equal(t, expected, actual)
 }
 
 func TestDay3C(t *testing.T) {
-	results := TotalOutputVoltage(y2025ExampleData)
 	
-	expected := 3121910778619
-	actual := results[1]
+	var expected int64 = 3121910778619
+	actual := TotalOutputJoltage(y2025ExampleData, 12)
 	
 	assert.Equal(t, expected, actual)
 }
 
 func TestDay3D(t *testing.T) {
-	results := TotalOutputVoltage(y2025ChallengeData)
 	
-	expected := 0
-	actual := results[1]
+	var expected int64 = 172119830406258
+	actual := TotalOutputJoltage(y2025ChallengeData, 12)
 	
 	assert.Equal(t, expected, actual)
 }
