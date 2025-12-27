@@ -3,46 +3,43 @@ package day10
 import (
 	"testing"
 
+	"adventofcode.dev/utils"
 	. "adventofcode.dev/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDay10A(t *testing.T) {
-	lines, _ := ReadLines(Year2024, Example)
-	lavaTrails := NewLavaTrails(lines)
+	data := utils.NewData(utils.Example, utils.Year2024)
 
 	expected := 36
-	actual := TotalTrailheadScore(lavaTrails)
+	actual := TotalTrailheadScore(data)
 
 	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
 }
 
 func TestDay10B(t *testing.T) {
-	lines, _ := ReadLines(Year2024, Challenge)
-	lavaTrails := NewLavaTrails(lines)
+	data := utils.NewData(utils.Challenge, utils.Year2024)
 
 	expected := 776
-	actual := TotalTrailheadScore(lavaTrails)
+	actual := TotalTrailheadScore(data)
 
 	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
 }
 
 func TestDay10C(t *testing.T) {
-	lines, _ := ReadLines(Year2024, Example)
-	lavaTrails := NewLavaTrails(lines)
+	data := utils.NewData(utils.Example, utils.Year2024)
 
 	expected := 81
-	actual := TotalTrailheadRating(lavaTrails)
+	actual := TotalTrailheadRating(data)
 
 	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
 }
 
 func TestDay10D(t *testing.T) {
-	lines, _ := ReadLines(Year2024, Challenge)
-	lavaTrails := NewLavaTrails(lines)
+	data := utils.NewData(utils.Challenge, utils.Year2024)
 
 	expected := 1657
-	actual := TotalTrailheadRating(lavaTrails)
+	actual := TotalTrailheadRating(data)
 
 	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
 }

@@ -1,5 +1,24 @@
 package day11
 
+import (
+	"strconv"
+	"strings"
+
+	"adventofcode.dev/utils"
+)
+
+func DataFormatter(data []string) any {
+	out := []int64{}
+	for _, str := range data {
+		parts := strings.SplitSeq(str, " ")
+		for p := range parts {
+			n, _ := strconv.ParseInt(p, 10, 64)
+			out = append(out, n)
+		}
+	}
+	return out
+}
+
 func numberOfDigits(n int64) int {
 	if n == 0 {
 		return 1
@@ -57,7 +76,9 @@ func blink(n, depth int64, memo map[[2]int64]int64) int64 {
 	return out
 }
 
-func NumberOfStones(depth int64, nums []int64) int64 {
+func NumberOfStones(depth int64, d *utils.Data) int64 {
+	nums := d.Formatted(DataFormatter).([]int64)
+	
 	memo := make(map[[2]int64]int64)
 	var total int64
 	for _, n := range nums {

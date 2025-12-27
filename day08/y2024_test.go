@@ -3,58 +3,42 @@ package day08
 import (
 	"testing"
 
-	. "adventofcode.dev/utils"
+	"adventofcode.dev/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDay8A(t *testing.T) {
-	scan, err := ReadLines(Year2024, Example)
-	if err != nil {
-		panic(MsgPanic)
-	}
-	city := City{Scan: scan}
+	data := utils.NewData(utils.Example, utils.Year2024)
 
 	expected := 14
-	actual := city.CountUniqueLocations()
+	actual := CountUniqueLocations(data)
 
 	assert.Equal(t, expected, actual)
 }
 
 func TestDay8B(t *testing.T) {
-	scan, err := ReadLines(Year2024, Challenge)
-	if err != nil {
-		panic(MsgPanic)
-	}
-	city := City{Scan: scan}
+	data := utils.NewData(utils.Challenge, utils.Year2024)
 
 	expected := 261
-	actual := city.CountUniqueLocations()
+	actual := CountUniqueLocations(data)
 
 	assert.Equal(t, expected, actual)
 }
 
 func TestDay8C(t *testing.T) {
-	scan, err := ReadLines(Year2024, Example)
-	if err != nil {
-		panic("unable to find input data")
-	}
-	city := City{Scan: scan}
+	data := utils.NewData(utils.Example, utils.Year2024)
 
 	expected := 34
-	actual := city.CountUniqueLocationsHarmonics()
+	actual := CountUniqueLocationsHarmonics(data)
 
 	assert.Equal(t, expected, actual)
 }
 
 func TestDay8D(t *testing.T) {
-	scan, err := ReadLines(Year2024, Challenge)
-	if err != nil {
-		panic("unable to find input data")
-	}
-	city := City{Scan: scan}
+	data := utils.NewData(utils.Challenge, utils.Year2024)
 
 	expected := 988
-	actual := city.CountUniqueLocationsHarmonics()
+	actual := CountUniqueLocationsHarmonics(data)
 
 	assert.Equal(t, expected, actual)
 }

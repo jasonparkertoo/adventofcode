@@ -1,5 +1,7 @@
 package day08
 
+import "adventofcode.dev/utils"
+
 
 type Pos struct {
 	X, Y int
@@ -10,31 +12,23 @@ type Antenna struct {
 	Pos  Pos
 }
 
-type City struct {
-	Scan []string
+func CountUniqueLocations(d *utils.Data) int {
+	return countAntinodes(antinodesPart1, d)
 }
 
-// --------------------
-// Public API
-// --------------------
-func (c *City) CountUniqueLocations() int {
-	return c.countAntinodes(c.antinodesPart1)
+func CountUniqueLocationsHarmonics(d *utils.Data) int {
+	return countAntinodes(antinodesPart2, d)
 }
 
-func (c *City) CountUniqueLocationsHarmonics() int {
-	return c.countAntinodes(c.antinodesPart2)
-}
-
-// --------------------
-// Core shared logic
-// --------------------
 type AntinodeStrategy func(a, b Pos, width, height int) map[Pos]struct{}
 
-func (c *City) countAntinodes(strategy AntinodeStrategy) int {
-	height := len(c.Scan)
-	width := len(c.Scan[0])
+func countAntinodes(strategy AntinodeStrategy, d *utils.Data) int {
+	lines := d.Lines()
+	
+	height := len(lines)
+	width := len(lines[0])
 
-	antennas := c.parseAntennas()
+	antennas := parseAntennas(lines)
 	byFreq := make(map[rune][]Antenna)
 	for _, ant := range antennas {
 		byFreq[ant.Freq] = append(byFreq[ant.Freq], ant)
@@ -58,12 +52,10 @@ func (c *City) countAntinodes(strategy AntinodeStrategy) int {
 	return len(antinodes)
 }
 
-// --------------------
-// Parsing
-// --------------------
-func (c *City) parseAntennas() []Antenna {
+func parseAntennas(lines []string) []Antenna {
+	
 	var antennas []Antenna
-	for y, line := range c.Scan {
+	for y, line := range lines {
 		for x, ch := range line {
 			if ch != '.' {
 				antennas = append(antennas, Antenna{Freq: ch, Pos: Pos{X: x, Y: y}})
@@ -73,10 +65,7 @@ func (c *City) parseAntennas() []Antenna {
 	return antennas
 }
 
-// --------------------
-// Strategies
-// --------------------
-func (c *City) antinodesPart1(a, b Pos, width, height int) map[Pos]struct{} {
+func antinodesPart1(a, b Pos, width, height int) map[Pos]struct{} {
 	result := make(map[Pos]struct{})
 	dx := b.X - a.X
 	dy := b.Y - a.Y
@@ -93,7 +82,7 @@ func (c *City) antinodesPart1(a, b Pos, width, height int) map[Pos]struct{} {
 	return result
 }
 
-func (c *City) antinodesPart2(a, b Pos, width, height int) map[Pos]struct{} {
+func antinodesPart2(a, b Pos, width, height int) map[Pos]struct{} {
 	result := make(map[Pos]struct{})
 	dx := b.X - a.X
 	dy := b.Y - a.Y
@@ -120,9 +109,6 @@ func (c *City) antinodesPart2(a, b Pos, width, height int) map[Pos]struct{} {
 	return result
 }
 
-// --------------------
-// Helpers
-// --------------------
 func inBounds(p Pos, width, height int) bool {
 	return p.X >= 0 && p.Y >= 0 && p.X < width && p.Y < height
 }

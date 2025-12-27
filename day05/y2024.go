@@ -5,6 +5,8 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+
+	"adventofcode.dev/utils"
 )
 
 type Rule struct {
@@ -59,7 +61,8 @@ func parsePageNumbers(lines []string) [][]int {
 	return pn
 }
 
-func NewPrintQueue(lines []string) PrintQueue {
+func ToPrintQueue(d *utils.Data) PrintQueue {
+	lines := d.Lines()
 	pageNumbers := parsePageNumbers(lines)
 	rules := parseRules(lines)
 
@@ -86,7 +89,8 @@ func conformsToRule(p []int, r Rule) bool {
 	return left < right
 }
 
-func SumMiddlePageNumbers(q *PrintQueue) int {
+func SumMiddlePageNumbers(d *utils.Data) int {
+	q := ToPrintQueue(d)
 	sum := 0
 	for _, s := range q.SafetyManuals {
 		isValid := true
@@ -162,7 +166,9 @@ func correctPageOrder(manual SafetyManual) []int {
 	return topologicalSort(graph, inDegree)
 }
 
-func SumIncorrectMiddlePageNumbers(q *PrintQueue) int {
+func SumIncorrectMiddlePageNumbers(d *utils.Data) int {
+	q := ToPrintQueue(d)
+	
 	sum := 0
 	for _, s := range q.SafetyManuals {
 		for _, r := range s.Rules {

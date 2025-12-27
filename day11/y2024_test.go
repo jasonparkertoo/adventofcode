@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"adventofcode.dev/utils"
 	. "adventofcode.dev/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -31,26 +32,29 @@ func toIntArray(str string) []int64 {
 	return out
 }
 
-func TestDay11Scratch(t *testing.T) {
-	var expected int64 = 22
-	actual := NumberOfStones(6, ExampleData)
-	assert.Equal(t, expected, actual)
-}
-
 func TestDay11A(t *testing.T) {
+	data := utils.NewData(utils.Example, utils.Year2024)
+
 	var expected int64 = 55312
-	actual := NumberOfStones(25, ExampleData)
+	actual := NumberOfStones(25, data)
+
 	assert.Equal(t, expected, actual)
 }
 
 func TestDay11B(t *testing.T) {
+	data := utils.NewData(utils.Challenge, utils.Year2024)
+
 	var expected int64 = 202019
-	actual := NumberOfStones(25, ChallengeData)
+	actual := NumberOfStones(25, data)
+
 	assert.Equal(t, expected, actual)
 }
 
 func TestDay11C(t *testing.T) {
+	data := utils.NewData(utils.Challenge, utils.Year2024)
+
 	var expected int64 = 239321955280205
-	actual := NumberOfStones(75, ChallengeData)
+	actual := NumberOfStones(75, data)
+
 	assert.Equal(t, expected, actual)
 }

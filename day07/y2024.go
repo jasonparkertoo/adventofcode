@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"adventofcode.dev/utils"
 )
 
 type Equation struct {
@@ -15,7 +17,7 @@ type Calibrations struct {
 	equations []Equation
 }
 
-func NewCalibrations(lines []string) (*Calibrations, error) {
+func ToCalibrations(lines []string) (*Calibrations, error) {
 	var equations []Equation
 	for _, line := range lines {
 		if line == "" {
@@ -62,7 +64,9 @@ func isValid(numbers []int, target int, index int, currentValue int) bool {
 	return false
 }
 
-func TotalCalibrationResult(c *Calibrations) int {
+func TotalCalibrationResult(d *utils.Data) int {
+	lines := d.Lines()
+	c, _ := ToCalibrations(lines)
 	sum := 0
 	for _, eq := range c.equations {
 		if isValid(eq.numbers, eq.result, 1, eq.numbers[0]) {
@@ -91,7 +95,9 @@ func isValidWithConcat(numbers []int, target int, index int, currentValue int) b
 	return isValidWithConcat(numbers, target, index+1, concatVal)
 }
 
-func TotalCalibrationResultWithConcat(c *Calibrations) int {
+func TotalCalibrationResultWithConcat(data *utils.Data) int {
+	c, _ := ToCalibrations(data.Lines())
+	
 	sum := 0
 	for _, eq := range c.equations {
 		// index and currentValue are ignored in this approach

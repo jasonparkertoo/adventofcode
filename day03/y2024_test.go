@@ -3,45 +3,33 @@ package day03
 import (
 	"testing"
 
-	. "adventofcode.dev/utils"
+	"adventofcode.dev/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDay3PartOneA(t *testing.T) {
-	records, err := ReadLines(Year2024, Example)
-	if err != nil {
-		panic(MsgPanic)
-	}
-	instructions := NewInstructions(records)
+	data := utils.NewData(utils.Example, utils.Year2024)
 
 	expected := 161
-	actual := CalculateUncorrupted(instructions)
+	actual := CalculateUncorrupted(data)
 
-	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
+	assert.Equal(t, expected, actual, utils.MsgExpected, expected, actual)
 }
 
 func TestDay3PartOneB(t *testing.T) {
-	records, err := ReadLines(Year2024, Challenge)
-	if err != nil {
-		panic("unable to find input data")
-	}
-	instructions := NewInstructions(records)
-
+	data := utils.NewData(utils.Challenge, utils.Year2024)
+	
 	expected := 156388521
-	actual := CalculateUncorrupted(instructions)
+	actual := CalculateUncorrupted(data)
 
-	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
+	assert.Equal(t, expected, actual, utils.MsgExpected, expected, actual)
 }
 
 func TestDay3PartTwoB(t *testing.T) {
-	records, err := ReadLines(Year2024, Challenge)
-	if err != nil {
-		panic("unable to find input data")
-	}
-	instructions := NewInstructions(records)
-
+	data := utils.NewData(utils.Challenge, utils.Year2024)
+	
 	expected := 75920122
-	actual := Calculate(instructions)
+	actual := Calculate(data)
 
-	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
+	assert.Equal(t, expected, actual, utils.MsgExpected, expected, actual)
 }

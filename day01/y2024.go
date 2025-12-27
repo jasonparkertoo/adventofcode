@@ -4,6 +4,8 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+
+	"adventofcode.dev/utils"
 )
 
 type LocationIds struct {
@@ -11,7 +13,7 @@ type LocationIds struct {
 	right []int
 }
 
-func NewLocationIds(lines []string) LocationIds {
+func ToLocationIds(lines []string) LocationIds {
 	var left, right []int
 	for _, line := range lines {
 		tok := strings.Split(line, "   ")
@@ -30,10 +32,12 @@ func NewLocationIds(lines []string) LocationIds {
 	}
 }
 
-func TotalDistance(d LocationIds) int {
+func TotalDistance(d *utils.Data) int {
+	ids := ToLocationIds(d.Lines())
+	
 	t := 0
-	for i := range d.left {
-		abs := d.left[i] - d.right[i]
+	for i := range ids.left {
+		abs := ids.left[i] - ids.right[i]
 		if abs < 0 {
 			abs *= -1
 		}
@@ -42,18 +46,20 @@ func TotalDistance(d LocationIds) int {
 	return t
 }
 
-func SimilarityScore(d LocationIds) int {
+func SimilarityScore(d *utils.Data) int {
+	ids := ToLocationIds(d.Lines())
+	
 	om := func() map[int]int {
 		m := make(map[int]int)
-		for i := range d.right {
-			m[d.right[i]]++
+		for i := range ids.right {
+			m[ids.right[i]]++
 		}
 		return m
 	}()
 
 	score := 0
-	for i := range d.left {
-		score += om[d.left[i]] * d.left[i]
+	for i := range ids.left {
+		score += om[ids.left[i]] * ids.left[i]
 	}
 
 	return score

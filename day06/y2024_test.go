@@ -3,60 +3,42 @@ package day06
 import (
 	"testing"
 
-	. "adventofcode.dev/utils"
+	"adventofcode.dev/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDay6A(t *testing.T) {
-	records, err := ReadLines(Year2024, Example)
-	if err != nil {
-		panic(MsgPanic)
-	}
-	m, _ := Generate(records)
-	path, _ := Explore(m)
+	data := utils.NewData(utils.Example, utils.Year2024)
 
 	expected := 41
-	actual := len(path)
+	actual := CountDistinctPositions(data)
 
 	assert.Equal(t, expected, actual)
 }
 
 func TestDay6B(t *testing.T) {
-	records, err := ReadLines(Year2024, Challenge)
-	if err != nil {
-		panic(MsgPanic)
-	}
-	m, _ := Generate(records)
-	path, _ := Explore(m)
+	data := utils.NewData(utils.Challenge, utils.Year2024)
 
 	expected := 5551
-	actual := len(path)
+	actual := CountDistinctPositions(data)
 
 	assert.Equal(t, expected, actual)
 }
 
 func TestDay6C(t *testing.T) {
-	records, err := ReadLines(Year2024, Example)
-	if err != nil {
-		panic("unable to find input data")
-	}
-	m, _ := Generate(records)
+	data := utils.NewData(utils.Example, utils.Year2024)
 
 	expected := 6
-	actual, _ := CountLoopPositions(m)
+	actual, _ := CountLoopPositions(data)
 
 	assert.Equal(t, expected, actual)
 }
 
 func TestDay6D(t *testing.T) {
-	records, err := ReadLines(Year2024, Challenge)
-	if err != nil {
-		panic("unable to find input data")
-	}
-	m, _ := Generate(records)
+	data := utils.NewData(utils.Challenge, utils.Year2024)
 
 	expected := 1939
-	actual, _ := CountLoopPositions(m)
+	actual, _ := CountLoopPositions(data)
 
 	assert.Equal(t, expected, actual)
 }

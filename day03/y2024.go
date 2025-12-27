@@ -4,13 +4,15 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"adventofcode.dev/utils"
 )
 
 type Memory struct {
 	sections []string
 }
 
-func NewInstructions(lines []string) Memory {
+func ToMemory(lines []string) Memory {
 	sections := make([]string, 0)
 	sections = append(sections, lines...)
 	return Memory{
@@ -39,7 +41,10 @@ func execute(instruction string) int {
 	}
 }
 
-func CalculateUncorrupted(c Memory) int {
+func CalculateUncorrupted(d *utils.Data) int {
+	input := d.Lines()
+	c := ToMemory(input)
+	
 	var instructions []string
 	for _, section := range c.sections {
 		instructions = append(instructions, ReMul.FindAllString(section, -1)...)
@@ -51,7 +56,10 @@ func CalculateUncorrupted(c Memory) int {
 	return sum
 }
 
-func Calculate(c Memory) int {
+func Calculate(d *utils.Data) int {
+	input := d.Lines()
+	c := ToMemory(input)
+	
 	var instructions []string
 	for _, section := range c.sections {
 		instructions = append(instructions, ReMul.FindAllString(section, -1)...)

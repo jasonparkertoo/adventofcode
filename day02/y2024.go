@@ -3,9 +3,11 @@ package day02
 import (
 	"strconv"
 	"strings"
+
+	"adventofcode.dev/utils"
 )
 
-func NewReports(lines []string) (reports [][]int) {
+func ToReports(lines []string) (reports [][]int) {
 	for _, line := range lines {
 		var report []int
 		for r := range strings.SplitSeq(line, " ") {
@@ -108,10 +110,12 @@ func isTolerable(r []int) bool {
 	return false
 }
 
-func NumberOfSafeReports(useDampener bool, c [][]int) int {
+func NumberOfSafeReports(useDampener bool, data *utils.Data) int {
+	reports := ToReports(data.Lines())
+	
 	count := 0
-	for i := range c {
-		r := c[i]
+	for i := range reports {
+		r := reports[i]
 		
 		safe := false
 		if useDampener {

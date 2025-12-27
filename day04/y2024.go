@@ -3,13 +3,17 @@ package day04
 import (
 	"slices"
 	"strings"
+
+	"adventofcode.dev/utils"
 )
 
 type Puzzle struct {
 	letters [][]string
 }
 
-func NewPuzzle(lines []string) Puzzle {
+func ToPuzzle(data *utils.Data) *Puzzle {
+	lines := data.Lines()
+	
 	var letters [][]string
 
 	for _, line := range lines {
@@ -19,14 +23,12 @@ func NewPuzzle(lines []string) Puzzle {
 		letters = append(letters, strings.Split(line, ""))
 	}
 
-	return Puzzle{
+	return &Puzzle{
 		letters: letters,
 	}
 }
 
 type SearchFunction func(string, *Puzzle) int
-
-
 
 func compare(curr []string, target []string) int {
 	l := make([]string, len(curr))
@@ -49,7 +51,6 @@ func compare(curr []string, target []string) int {
 func toSlice(s string) []string {
 	return strings.Split(strings.ToUpper(s), "")
 }
-
 
 func SearchHorizontal(w string, p *Puzzle) int {
 	count := 0
@@ -133,7 +134,9 @@ func SearchXPattern(w string, p *Puzzle) int {
 	return count
 }
 
-func Count(w string, p *Puzzle) int {
+func Count(w string, d *utils.Data) int {
+	p := ToPuzzle(d)
+	
 	count := 0
 	count += SearchHorizontal(w, p)
 	count += SearchVertical(w, p)
@@ -143,6 +146,7 @@ func Count(w string, p *Puzzle) int {
 }
 
 
-func CountPattern(w string, p *Puzzle, pt func(string, *Puzzle) int) int {
+func CountPattern(w string, d *utils.Data, pt func(string, *Puzzle) int) int {
+	p := ToPuzzle(d)
 	return pt(w, p)
 }

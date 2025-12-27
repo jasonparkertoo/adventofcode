@@ -1,10 +1,14 @@
 package day12
 
+import "adventofcode.dev/utils"
+
 type PlotPoint struct {
 	x, y int
 }
 
-func CalculateTotalPrice(grid []string) int {
+func CalculateTotalPrice(d *utils.Data) int {
+	grid := d.Lines()
+	
 	if len(grid) == 0 {
 		return 0
 	}

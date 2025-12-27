@@ -3,50 +3,43 @@ package day09
 import (
 	"testing"
 
+	"adventofcode.dev/utils"
 	. "adventofcode.dev/utils"
 	"github.com/stretchr/testify/assert"
 )
 
-var exampleData []string
-var challengeData []string
-
-func init() {
-	exampleData, _ = ReadLines(Year2024, Example)
-	challengeData, _ = ReadLines(Year2024, Challenge)
-}
-
 func TestDay9A(t *testing.T) {
-	hd := Harddrive{DataMap: exampleData[0]}
+	data := utils.NewData(utils.Example, utils.Year2024)
 
 	expected := 1928
-	actual := ChecksumHarddrive(hd, CompactNormal)
+	actual := ChecksumHarddrive(data, CompactNormal)
 
 	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
 }
 
 func TestDay9B(t *testing.T) {
-	hd := Harddrive{DataMap: challengeData[0]}
+	data := utils.NewData(utils.Challenge, utils.Year2024)
 
 	expected := 6262891638328
-	actual := ChecksumHarddrive(hd, CompactNormal)
+	actual := ChecksumHarddrive(data, CompactNormal)
 
 	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
 }
 
 func TestDay9C(t *testing.T) {
-	hd := Harddrive{DataMap: exampleData[0]}
+	data := utils.NewData(utils.Example, utils.Year2024)
 
 	expected := 2858
-	actual := ChecksumHarddrive(hd, CompactLeft)
+	actual := ChecksumHarddrive(data, CompactLeft)
 
 	assert.Equal(t, expected, actual, "expected %s, got %d", expected, actual)
 }
 
 func TestDay9D(t *testing.T) {
-	hd := Harddrive{DataMap: challengeData[0]}
+	data := utils.NewData(utils.Challenge, utils.Year2024)
 
 	expected := 6287317016845
-	actual := ChecksumHarddrive(hd, CompactLeft)
+	actual := ChecksumHarddrive(data, CompactLeft)
 
 	assert.Equal(t, expected, actual, "expected %s, got %d", expected, actual)
 }

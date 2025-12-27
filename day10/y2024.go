@@ -1,5 +1,7 @@
 package day10
 
+import "adventofcode.dev/utils"
+
 type Point struct{ R, C int }
 
 type LavaTrails struct {
@@ -7,7 +9,9 @@ type LavaTrails struct {
 	rows,cols int
 }
 
-func NewLavaTrails(lines []string) *LavaTrails {
+func ToLavaTrails(d *utils.Data) *LavaTrails {
+	lines := d.Lines()
+	
 	rows := len(lines)
 	cols := len(lines[0])
 	grid := make([][]int, rows)
@@ -17,6 +21,7 @@ func NewLavaTrails(lines []string) *LavaTrails {
 			grid[r][c] = int(lines[r][c] - '0')
 		}
 	}
+	
 	return &LavaTrails{
 		grid: grid,
 		rows: rows,
@@ -102,7 +107,9 @@ func countPaths(t *LavaTrails, p Point, memo map[Point]int) int {
     return count
 }
 
-func TotalTrailheadRating(t *LavaTrails) int {
+func TotalTrailheadRating(d *utils.Data) int {
+	t := ToLavaTrails(d)
+	
     sum := 0
     for r := 0; r < t.rows; r++ {
         for c := 0; c < t.cols; c++ {
@@ -116,7 +123,9 @@ func TotalTrailheadRating(t *LavaTrails) int {
     return sum
 }
 
-func TotalTrailheadScore(t *LavaTrails) int {
+func TotalTrailheadScore(d *utils.Data) int {
+	t := ToLavaTrails(d)
+	
 	memo := make(map[Point]map[Point]struct{})
 	sum := 0
 	for r := 0; r < t.rows; r++ {

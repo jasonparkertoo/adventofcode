@@ -3,13 +3,15 @@ package day02
 import (
 	"strconv"
 	"strings"
+
+	"adventofcode.dev/utils"
 )
 
 type ProductIds struct {
 	Ids [][]string
 }
 
-func NewProductIds(data []string) *ProductIds {
+func ToProductIds(data []string) *ProductIds {
 	ranges := data[0]
 	parts := strings.Split(ranges, ",")
 
@@ -22,7 +24,7 @@ func NewProductIds(data []string) *ProductIds {
 	}
 }
 
-func (p ProductIds) CheckInvalid(num string) (bool, bool) {
+func CheckInvalid(num string) (bool, bool) {
 	isInv := false
 	if len(num)%2 == 0 {
 		halfLen := len(num) / 2
@@ -56,9 +58,10 @@ func (p ProductIds) CheckInvalid(num string) (bool, bool) {
 	return isInv, isInv2
 }
 
-/* IsInvalid2 has been merged into CheckInvalid */
-
-func (p ProductIds) SumInvalidIds() []int {
+func SumInvalidIds(data *utils.Data) []int {
+	lines := data.Lines()
+	p := ToProductIds(lines)
+	
 	sum := 0
 	sum2 := 0
 	for _, id := range p.Ids {
@@ -67,7 +70,7 @@ func (p ProductIds) SumInvalidIds() []int {
 
 		for i := l; i <= r; i++ {
 			n := strconv.Itoa(i)
-			isInv, isInv2 := p.CheckInvalid(n)
+			isInv, isInv2 := CheckInvalid(n)
 			if isInv {
 				sum += i
 			}

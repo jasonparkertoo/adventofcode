@@ -2,6 +2,8 @@ package day06
 
 import (
 	"fmt"
+
+	"adventofcode.dev/utils"
 )
 
 type Maze struct {
@@ -142,7 +144,12 @@ func CausesLoop(current Position, m *Maze) bool {
 	return false
 }
 
-func CountLoopPositions(m *Maze) (int, error) {
+func CountLoopPositions(d *utils.Data) (int, error) {
+	m, err := Generate(d.Lines())
+	if err != nil {
+		panic(err)
+	}
+	
 	guardPos, err := m.FindGuard()
 	if err != nil {
 		return 0, err
@@ -162,4 +169,13 @@ func CountLoopPositions(m *Maze) (int, error) {
 		}
 	}
 	return count, nil
+}
+
+func CountDistinctPositions(d *utils.Data) int {
+	m, err := Generate(d.Lines())
+	if err != nil {
+		panic(err)
+	}
+	pos, _ := Explore(m)
+	return len(pos)
 }

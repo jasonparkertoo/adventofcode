@@ -8,53 +8,37 @@ import (
 )
 
 func TestDay1PartOneA(t *testing.T) {
-	records, err := ReadLines(Year2024, Example)
-	if err != nil {
-		panic(MsgPanic)
-	}
-	locationIds := NewLocationIds(records)
-
+	data := NewData(Example, Year2024)
+	
 	expected := 11
-	actual := TotalDistance(locationIds)
+	actual := TotalDistance(data)
 
 	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
 }
 
 func TestDay1PartOneB(t *testing.T) {
-	records, err := ReadLines(Year2024, Challenge)
-	if err != nil {
-		panic(MsgPanic)
-	}
-	locationIds := NewLocationIds(records)
-
+	data := NewData(Challenge, Year2024)
+	
 	expected := 2285373
-	actual := TotalDistance(locationIds)
+	actual := TotalDistance(data)
 
 	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
 }
 
 func TestDay1PartTwoA(t *testing.T) {
-	records, err := ReadLines(Year2024, Example)
-	if err != nil {
-		panic("unable to find input data")
-	}
-	locationIds := NewLocationIds(records)
-
+	data := NewData(Example, Year2024)
+	
 	expected := 31
-	actual := SimilarityScore(locationIds)
+	actual := SimilarityScore(data)
 
 	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
 }
 
 func TestDay1PartTwoB(t *testing.T) {
-	records, err := ReadLines(Year2024, Challenge)
-	if err != nil {
-		panic("unable to find input data")
-	}
-	locationIds := NewLocationIds(records)
-
+	data := NewData(Challenge, Year2024)
+	
 	expected := 21142653
-	actual := SimilarityScore(locationIds)
+	actual := SimilarityScore(data)
 
 	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
 }

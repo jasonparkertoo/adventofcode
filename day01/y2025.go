@@ -2,6 +2,8 @@ package day01
 
 import (
 	"strconv"
+
+	"adventofcode.dev/utils"
 )
 
 type Pair struct {
@@ -12,10 +14,10 @@ type Document struct {
 	Pairs []Pair
 }
 
-func NewDocument(rotations []string) *Document {
+func ToDocument(d *utils.Data) *Document {
 	var pairs []Pair
 
-	for _, rotation := range rotations {
+	for _, rotation := range d.Lines() {
 		d := rotation[0:1]
 		t, _ := strconv.Atoi(rotation[1:])
 		pair := Pair{Direction: d, Distance: t}
@@ -27,11 +29,13 @@ func NewDocument(rotations []string) *Document {
 	}
 }
 
-func (d Document) DoorPassword() []int {
+func DoorPassword(d *utils.Data) []int {
+	doc := ToDocument(d)
+	
 	pos := 50
 	landed, visited := 0, 0
 
-	for _, p := range d.Pairs {
+	for _, p := range doc.Pairs {
 		dis := p.Distance
 		for range dis {
 			switch p.Direction {

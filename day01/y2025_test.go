@@ -8,45 +8,37 @@ import (
 )
 
 func TestDayOnePartOneA(t *testing.T) {
-	input, _ := ReadLines(Year2025, Example)
-	doc := NewDocument(input)
-	result := doc.DoorPassword()
+	data := NewData(Example, Year2025)
 
 	expected := 3
-	actual := result[0]
+	actual := DoorPassword(data)[0]
 	
 	assert.Equal(t, expected, actual)
 }
 
 func TestDayOnePartOneB(t *testing.T) {
-	input, _ := ReadLines(Year2025, Challenge)
-	doc := NewDocument(input)
-	result := doc.DoorPassword()
+	data := NewData(Challenge, Year2025)
 
 	expected := 1195
-	actual := result[0]
+	actual := DoorPassword(data)[0]
 	
 	assert.Equal(t, expected, actual)
 }
 
 func TestDayOnePartTwoA(t *testing.T) {
-	input, _ := ReadLines(Year2025, Example)
-	doc := NewDocument(input)
-	result := doc.DoorPassword()
+	data := NewData(Example, Year2025)
 
 	expected := 6
-	actual := result[1]
+	actual := DoorPassword(data)[1]
 	
 	assert.Equal(t, expected, actual)
 }
 
 func TestDayOnePartTwoB(t *testing.T) {
-	input, _ := ReadLines(Year2025, Challenge)
-	doc := NewDocument(input)
-	result := doc.DoorPassword()
+	data := NewData(Challenge, Year2025)
 
 	expected := 6770
-	actual := result[1]
+	actual := DoorPassword(data)[1]
 	
 	assert.Equal(t, expected, actual)
 }

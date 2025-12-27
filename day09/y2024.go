@@ -1,5 +1,7 @@
 package day09
 
+import "adventofcode.dev/utils"
+
 type Block struct {
 	FileId int
 	Len    int
@@ -18,13 +20,15 @@ const (
 	CompactNormal string = "N"
 )
 
-func ChecksumHarddrive(hd Harddrive, method string) int {
+func ChecksumHarddrive(d *utils.Data, method string) int {
+	dataMap := d.Lines()[0]
+	
 	var blocks []Block
 	switch method {
 	case "L":
-		blocks = compactLeft(hd)
+		blocks = compactLeft(dataMap)
 	case "N":
-		blocks = compact(hd)
+		blocks = compact(dataMap)
 	default:
 		panic("unknown compact method requested")
 	}
@@ -32,11 +36,11 @@ func ChecksumHarddrive(hd Harddrive, method string) int {
 	return checksum
 }
 
-func blocks(hd Harddrive) []Block {
+func blocks(dataMap string) []Block {
 	fileId := 0
 
 	blocks := make([]Block, 0)
-	for i, r := range hd.DataMap {
+	for i, r := range dataMap {
 		length := r - '0'
 		if length == 0 {
 			continue
@@ -51,8 +55,8 @@ func blocks(hd Harddrive) []Block {
 	return blocks
 }
 
-func compact(hd Harddrive) []Block {
-	b := blocks(hd)
+func compact(dataMap string) []Block {
+	b := blocks(dataMap)
 
 	ds := make([]int, 0)
 	for i := range b {
@@ -98,9 +102,9 @@ func compact(hd Harddrive) []Block {
 	return append(result, Block{current, count})
 }
 
-func compactLeft(hd Harddrive) []Block {
+func compactLeft(dataMap string) []Block {
 	// Start from parsed blocks
-	blocks := append([]Block(nil), blocks(hd)...) // shallow copy
+	blocks := append([]Block(nil), blocks(dataMap)...) // shallow copy
 
 	// Determine highest file ID
 	maxID := -1
