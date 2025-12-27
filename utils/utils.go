@@ -92,6 +92,6 @@ func (d Data) Line(n int) (string, error) {
 	return d.lines[n-1], nil
 }
 
-func (d Data) Formatted(fn func([]string) any) any {
+func (d Data) TransformData(fn func([]string) any) any {
 	return fn(d.lines)
 }

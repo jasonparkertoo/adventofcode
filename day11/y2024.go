@@ -77,7 +77,7 @@ func blink(n, depth int64, memo map[[2]int64]int64) int64 {
 }
 
 func NumberOfStones(depth int64, d *utils.Data) int64 {
-	nums := d.Formatted(DataFormatter).([]int64)
+	nums := d.TransformData(DataFormatter).([]int64)
 	
 	memo := make(map[[2]int64]int64)
 	var total int64
