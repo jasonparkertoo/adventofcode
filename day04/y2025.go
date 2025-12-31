@@ -57,3 +57,31 @@ func count(row, column int, grid [][]string) int {
 
 	return count
 }
+
+func CountRemovable(d *utils.Data) int {
+	grid := d.TransformData(Dataformatter).([][]string)
+	removed := 0
+
+	for {
+		var toRemove [][2]int
+		for r := range grid {
+			for c := range grid[r] {
+				if grid[r][c] != PaperRoll {
+					continue
+				}
+				if count(r, c, grid) < 4 {
+					toRemove = append(toRemove, [2]int{r, c})
+				}
+			}
+		}
+		if len(toRemove) == 0 {
+			break
+		}
+		for _, pos := range toRemove {
+			grid[pos[0]][pos[1]] = "."
+		}
+		removed += len(toRemove)
+	}
+
+	return removed
+}

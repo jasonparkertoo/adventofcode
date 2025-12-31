@@ -24,3 +24,21 @@ func TestDay4B(t *testing.T) {
 
 	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
 }
+
+func TestDay4C(t *testing.T) {
+	d := NewData(Example, Year2025)
+	
+	expected := 43
+	actual := CountRemovable(d)
+	
+	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
+}
+
+func TestDay4D(t *testing.T) {
+	d := NewData(Challenge, Year2025)
+	
+	expected := -1
+	actual := CountRemovable(d)
+	
+	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
+}
