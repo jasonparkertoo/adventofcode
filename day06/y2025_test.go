@@ -24,3 +24,21 @@ func Test2025Day6B(t *testing.T) {
 
 	assert.Equal(t, expected, actual)
 }
+
+func Test2025Day6C(t *testing.T) {
+	d := utils.NewData(utils.Example, utils.Year2025)
+
+	expected := 3263827
+	actual := CalculateGrandTotal2(d)
+
+	assert.Equal(t, expected, actual)
+}
+
+func Test2025Day6D(t *testing.T) {
+	d := utils.NewData(utils.Challenge, utils.Year2025)
+
+	expected := 10153315705125
+	actual := CalculateGrandTotal2(d)
+
+	assert.Equal(t, expected, actual)
+}
