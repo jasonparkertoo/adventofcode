@@ -8,16 +8,6 @@ import (
 	"adventofcode.dev/utils"
 )
 
-// DataTransformer splits each line into non‑empty tokens using strings.Fields,
-// which removes all whitespace and returns the fields directly.
-func DataTransformer(lines []string) any {
-	var out [][]string
-	for _, line := range lines {
-		out = append(out, strings.Split(line, " "))
-	}
-	return out
-}
-
 // CalculateGrandTotal2 processes the vertical cephalopod math worksheet.
 func CalculateGrandTotal2(d *utils.Data) int {
 	lines := d.Lines()
@@ -112,6 +102,16 @@ func calculateBlock(nums []int, op byte) int {
 	return result
 }
 
+// DataTransformer splits each line into non‑empty tokens using strings.Fields,
+// which removes all whitespace and returns the fields directly.
+func DataTransformer(lines []string) any {
+	var out [][]string
+	for _, line := range lines {
+		out = append(out, strings.Fields(line))
+	}
+	return out
+}
+
 // CalculateGrandTotal computes the grand total by performing a single pass over
 // the input data. It eliminates the intermediate intVals matrix and reduces
 // allocations to just two slices that accumulate column sums and products.
@@ -125,8 +125,8 @@ func CalculateGrandTotal(d *utils.Data) int {
 	numCols := len(data[0])
 
 	// Accumulators for each column.
-	colSums := make([]int, numCols)
-	colProds := make([]int, numCols)
+	colSums := make([]int64, numCols)
+	colProds := make([]int64, numCols)
 	for i := range colProds {
 		colProds[i] = 1
 	}
@@ -136,12 +136,12 @@ func CalculateGrandTotal(d *utils.Data) int {
 		row := data[r]
 		for c, valStr := range row {
 			val, _ := strconv.Atoi(valStr)
-			colSums[c] += val
-			colProds[c] *= val
+			colSums[c] += int64(val)
+			colProds[c] *= int64(val)
 		}
 	}
 
-	total := 0
+	total := int64(0)
 	lastRow := data[numRows-1]
 	for c, op := range lastRow {
 		if op == "+" {
