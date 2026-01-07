@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -94,4 +95,11 @@ func (d Data) Line(n int) (string, error) {
 
 func (d Data) TransformData(fn func([]string) any) any {
 	return fn(d.lines)
+}
+
+func (d Data) AsGrid() (out [][]string) {
+	for _, row := range d.lines {
+		out = append(out, strings.Split(row, ""))
+	}
+	return out
 }
