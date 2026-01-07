@@ -1,23 +1,13 @@
 package day04
 
 import (
-	"strings"
-
 	"adventofcode.dev/utils"
 )
-
-func Dataformatter(s []string) any {
-	out := make([][]string, len(s))
-	for i, str := range s {
-		out[i] = strings.Split(str, "")
-	}
-	return out
-}
 
 const PaperRoll = "@"
 
 func CountAccessible(d *utils.Data) int {
-	grid := d.TransformData(Dataformatter).([][]string)
+	grid := d.AsGrid()
 
 	numAccessible := 0
 	for row := range len(grid) {
@@ -59,7 +49,7 @@ func count(row, column int, grid [][]string) int {
 }
 
 func CountRemovable(d *utils.Data) int {
-	grid := d.TransformData(Dataformatter).([][]string)
+	grid := d.AsGrid()
 	removed := 0
 
 	for {
