@@ -16,60 +16,54 @@ func DataTransformer(lines []string) any {
 }
 
 // CountBeamSplits calculates how many times a tachyon beam is split within the manifold.
-// It performs an iterative depth‑first traversal starting from 'S', propagating beams downward and splitting at '^'.
-// Each splitter is counted only once regardless of how many beams reach it.
+// A split is counted once per incoming beam that hits a splitter (^).
 func CountBeamSplits(d *utils.Data) int {
-	// Convert raw input into a 2D grid of characters.
 	grid := d.AsGrid()
 
-	// Locate the start position marked by 'S'.
-	var sr, sc int
-	found := false
-	for r, row := range grid {
-		for c, cell := range row {
-			if cell == "S" {
-				sr, sc = r, c
-				found = true
-				break
-			}
-		}
-		if found {
-			break
-		}
-	}
-	if !found {
-		return 0 // No starting point; nothing to count.
+	start, ok := findStart(grid)
+	if !ok {
+		return 0
 	}
 
-	type pos struct{ r, c int }
-	stack := []pos{{sr, sc}}      // Stack for DFS traversal.
-	visited := make(map[pos]bool) // Track visited cells to avoid re‑processing.
+	// beams present in current row
+	current := map[int]bool{start.c: true}
 	splitCount := 0
 
-	for len(stack) > 0 {
-		// Pop a position from the stack.
-		p := stack[len(stack)-1]
-		stack = stack[:len(stack)-1]
+	for row := start.r + 1; row < len(grid) && len(current) > 0; row++ {
+		next := make(map[int]bool)
 
-		if visited[p] { // Skip if we've already processed this cell.
-			continue
-		}
-		visited[p] = true
+		for col := range current {
+			if col < 0 || col >= len(grid[row]) {
+				continue
+			}
 
-		// Bounds check – skip positions outside the grid.
-		if p.r < 0 || p.r >= len(grid) || p.c < 0 || p.c >= len(grid[p.r]) {
-			continue
+			switch grid[row][col] {
+			case "^":
+				// splitter activates once
+				splitCount++
+				next[col-1] = true
+				next[col+1] = true
+
+			default:
+				next[col] = true
+			}
 		}
 
-		cell := grid[p.r][p.c]
-		if cell == "^" { // Splitter: count once and emit two new beams.
-			splitCount++
-			stack = append(stack, pos{p.r + 1, p.c - 1})
-			stack = append(stack, pos{p.r + 1, p.c + 1})
-		} else { // Empty space: continue downward.
-			stack = append(stack, pos{p.r + 1, p.c})
-		}
+		current = next
 	}
 
 	return splitCount
+}
+
+type pos struct{ r, c int }
+
+func findStart(grid [][]string) (pos, bool) {
+	for r, row := range grid {
+		for c, cell := range row {
+			if cell == "S" {
+				return pos{r, c}, true
+			}
+		}
+	}
+	return pos{}, false
 }
