@@ -1,19 +1,8 @@
 package day07
 
 import (
-	"strings"
-
 	"adventofcode.dev/utils"
 )
-
-// DataTransformer converts each line of the input into a slice of single-character strings.
-func DataTransformer(lines []string) any {
-	out := make([][]string, len(lines))
-	for i, row := range lines {
-		out[i] = strings.Split(row, "")
-	}
-	return out
-}
 
 // CountBeamSplits calculates how many times a tachyon beam is split within the manifold.
 // A split is counted once per incoming beam that hits a splitter (^).
