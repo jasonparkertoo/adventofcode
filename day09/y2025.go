@@ -78,220 +78,128 @@ func findLargestRectangle(d *utils.Data) int {
 // between consecutive red tiles and all interior tiles
 // inside that loop.
 func findLargestRectangleOfAny(d *utils.Data) int {
-	pts := d.TransformData(dataTransformer).([]point)
-	if len(pts) < 2 {
+	points := d.TransformData(dataTransformer).([]point)
+	if len(points) < 2 {
 		return 0
 	}
 
-	n := len(pts)
-	
-	// Find bounding box
-	minRow, maxRow := pts[0].row, pts[0].row
-	minCol, maxCol := pts[0].col, pts[0].col
-	for _, p := range pts {
-		if p.row < minRow { minRow = p.row }
-		if p.row > maxRow { maxRow = p.row }
-		if p.col < minCol { minCol = p.col }
-		if p.col > maxCol { maxCol = p.col }
-	}
+	minRow, maxRow, minCol, maxCol := boundingBox(points)
+	rowRanges := buildRowRanges(points, minRow, maxRow, minCol, maxCol)
 
-	// For each row, determine which columns are valid (red or green)
-	rowRanges := make(map[int][][2]int)
-	
-	for row := minRow; row <= maxRow; row++ {
-		// Collect x-coordinates where polygon edges cross this row
-		crossings := make([]int, 0)
-		
-		for i := range n {
-			p1 := pts[i]
-			p2 := pts[(i+1)%n]
-			
-			// Horizontal edge on this row
-			if p1.row == row && p2.row == row {
-				start, end := p1.col, p2.col
-				if start > end {
-					start, end = end, start
-				}
-				for x := start; x <= end; x++ {
-					crossings = append(crossings, x)
-				}
-				
-			} else if p1.col == p2.col { // Vertical edge crossing this row (not at endpoints for interior)
-				y1, y2 := p1.row, p2.row
-				if y1 > y2 {
-					y1, y2 = y2, y1
-				}
-				if y1 < row && row < y2 {
-					crossings = append(crossings, p1.col)
-				} else if row == y1 || row == y2 {
-					// On vertical edge endpoint
-					crossings = append(crossings, p1.col)
-				}
-			}
-		}
-		
-		if len(crossings) == 0 {
-			// Check if row is entirely inside polygon
-			midX := (minCol + maxCol) / 2
-			if pointInPolygon(midX, row, pts) {
-				rowRanges[row] = [][2]int{{minCol, maxCol}}
-			}
-			continue
-		}
-		
-		// Sort and deduplicate crossings
-		sort.Ints(crossings)
-		unique := crossings[:1]
-		for i := 1; i < len(crossings); i++ {
-			if crossings[i] != crossings[i-1] {
-				unique = append(unique, crossings[i])
-			}
-		}
-		crossings = unique
-		
-		// Determine valid intervals
-		validCols := make([]bool, maxCol-minCol+1)
-		
-		// Mark crossing points
-		for _, x := range crossings {
-			if x >= minCol && x <= maxCol {
-				validCols[x-minCol] = true
-			}
-		}
-		
-		// Check intervals between crossings
-		// Before first crossing
-		if crossings[0] > minCol {
-			midX := (minCol + crossings[0] - 1) / 2
-			if pointInPolygon(midX, row, pts) {
-				for x := minCol; x < crossings[0]; x++ {
-					validCols[x-minCol] = true
-				}
-			}
-		}
-		
-		// Between crossings
-		for i := 0; i < len(crossings)-1; i++ {
-			if crossings[i+1]-crossings[i] > 1 {
-				midX := (crossings[i] + crossings[i+1]) / 2
-				if pointInPolygon(midX, row, pts) {
-					for x := crossings[i] + 1; x < crossings[i+1]; x++ {
-						validCols[x-minCol] = true
-					}
-				}
-			}
-		}
-		
-		// After last crossing
-		last := crossings[len(crossings)-1]
-		if last < maxCol {
-			midX := (last + 1 + maxCol) / 2
-			if pointInPolygon(midX, row, pts) {
-				for x := last + 1; x <= maxCol; x++ {
-					validCols[x-minCol] = true
-				}
-			}
-		}
-		
-		// Convert to intervals
-		var intervals [][2]int
-		start := -1
-		for i, valid := range validCols {
-			col := i + minCol
-			if valid && start == -1 {
-				start = col
-			} else if !valid && start != -1 {
-				intervals = append(intervals, [2]int{start, col - 1})
-				start = -1
-			}
-		}
-		if start != -1 {
-			intervals = append(intervals, [2]int{start, maxCol})
-		}
-		
-		if len(intervals) > 0 {
-			rowRanges[row] = intervals
-		}
-	}
-
-	// Helper to check if a rectangle is valid
-	isRectangleValid := func(r1, r2, c1, c2 int) bool {
-		top, bottom := r1, r2
-		left, right := c1, c2
-		if top > bottom {
-			top, bottom = bottom, top
-		}
-		if left > right {
-			left, right = right, left
-		}
-		
-		for row := top; row <= bottom; row++ {
-			intervals, ok := rowRanges[row]
-			if !ok {
-				return false
-			}
-			
-			// Binary search for interval containing left
-			idx := sort.Search(len(intervals), func(i int) bool {
-				return intervals[i][1] >= left
-			})
-			
-			if idx >= len(intervals) || intervals[idx][0] > left || intervals[idx][1] < right {
-				return false
-			}
-		}
-		return true
-	}
-
-	// Find maximum area rectangle
 	maxArea := 0
-	
-	// Sort points for better cache locality
-	sortedPts := make([]point, len(pts))
-	copy(sortedPts, pts)
-	sort.Slice(sortedPts, func(i, j int) bool {
-		if sortedPts[i].row == sortedPts[j].row {
-			return sortedPts[i].col < sortedPts[j].col
-		}
-		return sortedPts[i].row < sortedPts[j].row
-	})
-	
-	// Check all pairs of red points
-	for i := 0; i < len(sortedPts); i++ {
-		p1 := sortedPts[i]
-		
-		for j := i + 1; j < len(sortedPts); j++ {
-			p2 := sortedPts[j]
-			
-			height := abs(p2.row-p1.row) + 1
-			width := abs(p2.col-p1.col) + 1
-			area := width * height
-			
+	for i := range points {
+		for j := i + 1; j < len(points); j++ {
+			p1, p2 := points[i], points[j]
+			area := rectangleArea(p1, p2)
 			if area <= maxArea {
 				continue
 			}
-			
-			if isRectangleValid(p1.row, p2.row, p1.col, p2.col) {
+			if rectangleIsValid(p1, p2, rowRanges) {
 				maxArea = area
 			}
 		}
 	}
-	
+
 	return maxArea
 }
 
-// pointInPolygon returns true if point (x,y) is inside the polygon
+func boundingBox(pts []point) (minR, maxR, minC, maxC int) {
+	minR, maxR = pts[0].row, pts[0].row
+	minC, maxC = pts[0].col, pts[0].col
+
+	for _, p := range pts {
+		minR = min(minR, p.row)
+		maxR = max(maxR, p.row)
+		minC = min(minC, p.col)
+		maxC = max(maxC, p.col)
+	}
+	return
+}
+
+func markCrossings(valid []bool, crossings []int, minCol int) {
+	for _, x := range crossings {
+		idx := x - minCol
+		if idx >= 0 && idx < len(valid) {
+			valid[idx] = true
+		}
+	}
+}
+
+func buildRowRanges(poly []point, minRow, maxRow, minCol, maxCol int) map[int][][2]int {
+	rows := make(map[int][][2]int)
+
+	for row := minRow; row <= maxRow; row++ {
+		crossings := collectCrossings(poly, row)
+
+		if len(crossings) == 0 {
+			if pointInPolygon((minCol+maxCol)/2, row, poly) {
+				rows[row] = [][2]int{{minCol, maxCol}}
+			}
+			continue
+		}
+
+		sort.Ints(crossings)
+		crossings = uniqueInts(crossings)
+
+		valid := make([]bool, maxCol-minCol+1)
+
+		markCrossings(valid, crossings, minCol)
+		fillInterior(valid, crossings, row, minCol, maxCol, poly)
+
+		if intervals := extractIntervals(valid, minCol); len(intervals) > 0 {
+			rows[row] = intervals
+		}
+	}
+
+	return rows
+}
+
+func collectCrossings(poly []point, row int) []int {
+	var xs []int
+
+	for i := range poly {
+		p1 := poly[i]
+		p2 := poly[(i+1)%len(poly)]
+
+		// Horizontal edge
+		if p1.row == row && p2.row == row {
+			a, b := p1.col, p2.col
+			if a > b {
+				a, b = b, a
+			}
+			for x := a; x <= b; x++ {
+				xs = append(xs, x)
+			}
+			continue
+		}
+
+		// Vertical edge
+		if p1.col == p2.col {
+			y1, y2 := p1.row, p2.row
+			if y1 > y2 {
+				y1, y2 = y2, y1
+			}
+			if y1 <= row && row <= y2 {
+				xs = append(xs, p1.col)
+			}
+		}
+	}
+
+	return xs
+}
+
+// pointInPolygon returns true if the point (x,y) is inside
+// or on the boundary of the polygon.
 func pointInPolygon(x, y int, polygon []point) bool {
 	n := len(polygon)
 	inside := false
-	
-	for i := 0; i < n; i++ {
+
+	for i := range n {
 		p1 := polygon[i]
 		p2 := polygon[(i+1)%n]
-		
-		// Check if point is on edge
+
+		// On vertical edge
 		if p1.col == p2.col && p1.col == x {
-			// Vertical edge
 			y1, y2 := p1.row, p2.row
 			if y1 > y2 {
 				y1, y2 = y2, y1
@@ -299,8 +207,10 @@ func pointInPolygon(x, y int, polygon []point) bool {
 			if y >= y1 && y <= y2 {
 				return true
 			}
-		} else if p1.row == p2.row && p1.row == y {
-			// Horizontal edge
+		}
+
+		// On horizontal edge
+		if p1.row == p2.row && p1.row == y {
 			x1, x2 := p1.col, p2.col
 			if x1 > x2 {
 				x1, x2 = x2, x1
@@ -309,17 +219,111 @@ func pointInPolygon(x, y int, polygon []point) bool {
 				return true
 			}
 		}
-		
-		// Ray casting intersection test
+
+		// Ray-casting test
 		if (p1.row > y) != (p2.row > y) {
-			// Edge crosses horizontal line at y
-			xintersect := p1.col + (y-p1.row)*(p2.col-p1.col)/(p2.row-p1.row)
-			
-			if xintersect < x {
+			xIntersect := p1.col +
+				(y-p1.row)*(p2.col-p1.col)/(p2.row-p1.row)
+			if xIntersect < x {
 				inside = !inside
 			}
 		}
 	}
-	
+
 	return inside
+}
+
+
+func fillInterior(valid []bool, crossings []int, row, minCol, maxCol int,poly []point) {
+	// Before first
+	if crossings[0] > minCol {
+		mid := (minCol + crossings[0] - 1) / 2
+		if pointInPolygon(mid, row, poly) {
+			for x := minCol; x < crossings[0]; x++ {
+				valid[x-minCol] = true
+			}
+		}
+	}
+
+	// Between crossings
+	for i := 0; i < len(crossings)-1; i++ {
+		if crossings[i+1]-crossings[i] > 1 {
+			start := crossings[i] + 1
+			end := crossings[i+1] - 1
+			mid := (start + end) / 2
+			if pointInPolygon(mid, row, poly) {
+				for x := start; x <= end; x++ {
+					valid[x-minCol] = true
+				}
+			}
+		}
+	}
+
+	// After last
+	last := crossings[len(crossings)-1]
+	if last < maxCol {
+		mid := (last + 1 + maxCol) / 2
+		if pointInPolygon(mid, row, poly) {
+			for x := last + 1; x <= maxCol; x++ {
+				valid[x-minCol] = true
+			}
+		}
+	}
+}
+
+func extractIntervals(valid []bool, minCol int) [][2]int {
+	var out [][2]int
+	start := -1
+
+	for i, ok := range valid {
+		col := i + minCol
+		if ok && start == -1 {
+			start = col
+		} else if !ok && start != -1 {
+			out = append(out, [2]int{start, col - 1})
+			start = -1
+		}
+	}
+
+	if start != -1 {
+		out = append(out, [2]int{start, minCol + len(valid) - 1})
+	}
+
+	return out
+}
+
+func rectangleIsValid(p1, p2 point, rows map[int][][2]int) bool {
+	top := min(p1.row, p2.row)
+	bot := max(p1.row, p2.row)
+	left := min(p1.col, p2.col)
+	right := max(p1.col, p2.col)
+
+	for r := top; r <= bot; r++ {
+		ints, ok := rows[r]
+		if !ok {
+			return false
+		}
+
+		i := sort.Search(len(ints), func(i int) bool {
+			return ints[i][1] >= left
+		})
+		if i >= len(ints) || ints[i][0] > left || ints[i][1] < right {
+			return false
+		}
+	}
+	return true
+}
+
+func rectangleArea(a, b point) int {
+	return (abs(a.row-b.row) + 1) * (abs(a.col-b.col) + 1)
+}
+
+func uniqueInts(xs []int) []int {
+	out := xs[:1]
+	for i := 1; i < len(xs); i++ {
+		if xs[i] != xs[i-1] {
+			out = append(out, xs[i])
+		}
+	}
+	return out
 }
