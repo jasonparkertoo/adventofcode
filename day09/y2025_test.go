@@ -17,3 +17,11 @@ func TestDay92025A(t *testing.T) {
 func TestDay92025B(t *testing.T) {
 	assert.Equal(t, 4756718172, findLargestRectangle(challengeData))
 }
+
+func TestDay92025C(t *testing.T) {
+	assert.Equal(t, 24, findLargestRectangleOfAny(exampleData))
+}
+
+func TestDay92025D(t *testing.T) {
+	assert.Equal(t, 1665679194, findLargestRectangleOfAny(challengeData))
+}
