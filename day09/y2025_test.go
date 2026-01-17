@@ -10,18 +10,18 @@ import (
 var exampleData = utils.NewData(utils.Example, utils.Year2025)
 var challengeData = utils.NewData(utils.Challenge, utils.Year2025)
 
-func TestDay92025A(t *testing.T) {
+func Test2025A(t *testing.T) {
 	assert.Equal(t, 50, findLargestRectangle(exampleData))
 }
 
-func TestDay92025B(t *testing.T) {
+func Test2025B(t *testing.T) {
 	assert.Equal(t, 4756718172, findLargestRectangle(challengeData))
 }
 
-func TestDay92025C(t *testing.T) {
+func Test2025C(t *testing.T) {
 	assert.Equal(t, 24, findLargestRectangleOfAny(exampleData))
 }
 
-func TestDay92025D(t *testing.T) {
+func Test2025D(t *testing.T) {
 	assert.Equal(t, 1665679194, findLargestRectangleOfAny(challengeData))
 }

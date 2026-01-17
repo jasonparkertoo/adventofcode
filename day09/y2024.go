@@ -2,11 +2,15 @@ package day09
 
 import "adventofcode.dev/utils"
 
+// Block represents a contiguous region on the hard drive.
+// FileId < 0 denotes a free block, otherwise it is a file with that ID.
 type Block struct {
 	FileId int
 	Len    int
 }
 
+// IsFree reports whether the block represents free space.
+// A block is considered free if its FileId is negative.
 func (b Block) IsFree() bool {
 	return b.FileId < 0
 }
@@ -20,9 +24,16 @@ const (
 	CompactNormal string = "N"
 )
 
+// ChecksumHarddrive calculates the checksum of a hard drive represented by the given *utils.Data.
+// The method string determines which compaction algorithm to use:
+//
+//	"L" – leftward compaction (compactLeft),
+//	"N" – normal compaction (compact).  Any other value causes a panic.
+//
+// The checksum is computed over the compacted block sequence.
 func ChecksumHarddrive(d *utils.Data, method string) int {
 	dataMap := d.Lines()[0]
-	
+
 	var blocks []Block
 	switch method {
 	case "L":
@@ -36,6 +47,9 @@ func ChecksumHarddrive(d *utils.Data, method string) int {
 	return checksum
 }
 
+// blocks converts a data map string into a slice of Block. Each character in the
+// string represents a block length; even indices correspond to files, odd
+// indices to free space. Zero-length blocks are ignored.
 func blocks(dataMap string) []Block {
 	fileId := 0
 
@@ -55,6 +69,10 @@ func blocks(dataMap string) []Block {
 	return blocks
 }
 
+// compact performs the normal compaction algorithm on the data map string. It
+// first expands the blocks into a linear representation, then moves free
+// blocks towards the right while preserving file order. The result is a slice
+// of compressed blocks.
 func compact(dataMap string) []Block {
 	b := blocks(dataMap)
 
@@ -102,9 +120,13 @@ func compact(dataMap string) []Block {
 	return append(result, Block{current, count})
 }
 
+// compactLeft performs a leftward compaction on the data map string. It moves
+// files towards the beginning of the map by repeatedly locating the next
+// suitable free block and shifting the file into that position, merging
+// adjacent free spaces when necessary.
 func compactLeft(dataMap string) []Block {
 	// Start from parsed blocks
-	blocks := append([]Block(nil), blocks(dataMap)...) // shallow copy
+	blocks := append([]Block(nil), blocks(dataMap)...)
 
 	// Determine highest file ID
 	maxID := -1
@@ -184,6 +206,9 @@ func compactLeft(dataMap string) []Block {
 	return blocks
 }
 
+// Checksum calculates the sum of (position * file ID) for each byte in all
+// non‑free blocks of the slice. Free space is skipped, but its length is
+// accumulated to offset positions of subsequent blocks.
 func Checksum(blocks []Block) int {
 	sum, pos := 0, 0
 	for _, b := range blocks {

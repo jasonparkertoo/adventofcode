@@ -17,9 +17,9 @@ type point struct {
 }
 
 // dataTransformer turns each input line in the form
-// "col,row" into a point struct. The function
-// returns a slice of points that can be type‑asserted
-// to []point by callers.
+// "col,row" into a point struct. The function returns
+// a slice of points that can be type‑asserted to
+// []point by callers.
 func dataTransformer(lines []string) any {
 	pts := make([]point, 0, len(lines))
 	for _, l := range lines {
@@ -103,6 +103,8 @@ func findLargestRectangleOfAny(d *utils.Data) int {
 	return maxArea
 }
 
+// boundingBox returns the minimum and maximum row and column
+// values that enclose all provided points.
 func boundingBox(pts []point) (minR, maxR, minC, maxC int) {
 	minR, maxR = pts[0].row, pts[0].row
 	minC, maxC = pts[0].col, pts[0].col
@@ -116,6 +118,8 @@ func boundingBox(pts []point) (minR, maxR, minC, maxC int) {
 	return
 }
 
+// markCrossings sets entries in the valid slice to true for each
+// column index that appears in crossings, offset by minCol.
 func markCrossings(valid []bool, crossings []int, minCol int) {
 	for _, x := range crossings {
 		idx := x - minCol
@@ -125,6 +129,8 @@ func markCrossings(valid []bool, crossings []int, minCol int) {
 	}
 }
 
+// buildRowRanges constructs a map from row indices to a slice of
+// inclusive [start, end] column intervals that are inside the polygon.
 func buildRowRanges(poly []point, minRow, maxRow, minCol, maxCol int) map[int][][2]int {
 	rows := make(map[int][][2]int)
 
@@ -154,6 +160,8 @@ func buildRowRanges(poly []point, minRow, maxRow, minCol, maxCol int) map[int][]
 	return rows
 }
 
+// collectCrossings returns a slice of column indices where a horizontal
+// or vertical edge of the polygon intersects the given row.
 func collectCrossings(poly []point, row int) []int {
 	var xs []int
 
@@ -188,8 +196,8 @@ func collectCrossings(poly []point, row int) []int {
 	return xs
 }
 
-// pointInPolygon returns true if the point (x,y) is inside
-// or on the boundary of the polygon.
+// pointInPolygon returns true if the point (x,y) is inside or on
+// the boundary of the polygon.
 func pointInPolygon(x, y int, polygon []point) bool {
 	n := len(polygon)
 	inside := false
@@ -233,8 +241,11 @@ func pointInPolygon(x, y int, polygon []point) bool {
 	return inside
 }
 
-
-func fillInterior(valid []bool, crossings []int, row, minCol, maxCol int,poly []point) {
+// fillInterior marks the interior of a polygon row by setting
+// entries in valid to true for columns between crossings that lie
+// within the polygon. It handles segments before the first crossing,
+// between consecutive crossings, and after the last crossing.
+func fillInterior(valid []bool, crossings []int, row, minCol, maxCol int, poly []point) {
 	// Before first
 	if crossings[0] > minCol {
 		mid := (minCol + crossings[0] - 1) / 2
@@ -271,6 +282,8 @@ func fillInterior(valid []bool, crossings []int, row, minCol, maxCol int,poly []
 	}
 }
 
+// extractIntervals converts a slice of bools indicating validity
+// into a slice of inclusive [start, end] column intervals.
 func extractIntervals(valid []bool, minCol int) [][2]int {
 	var out [][2]int
 	start := -1
@@ -292,6 +305,9 @@ func extractIntervals(valid []bool, minCol int) [][2]int {
 	return out
 }
 
+// rectangleIsValid checks whether the axis‑aligned rectangle defined by
+// points p1 and p2 lies entirely within the provided rowRanges map,
+// which contains per‑row intervals of valid columns.
 func rectangleIsValid(p1, p2 point, rows map[int][][2]int) bool {
 	top := min(p1.row, p2.row)
 	bot := max(p1.row, p2.row)
@@ -314,10 +330,14 @@ func rectangleIsValid(p1, p2 point, rows map[int][][2]int) bool {
 	return true
 }
 
+// rectangleArea returns the area of an axis‑aligned rectangle
+// defined by points a and b, including both corner tiles.
 func rectangleArea(a, b point) int {
 	return (abs(a.row-b.row) + 1) * (abs(a.col-b.col) + 1)
 }
 
+// uniqueInts removes consecutive duplicate integers from xs.
+// It assumes that the slice is sorted.
 func uniqueInts(xs []int) []int {
 	out := xs[:1]
 	for i := 1; i < len(xs); i++ {
