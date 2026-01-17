@@ -7,38 +7,22 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var ex2025 = utils.NewData(utils.Example, utils.Year2025)
+var ch2025 = utils.NewData(utils.Challenge, utils.Year2025)
+
+
 func Test2025Day6A(t *testing.T) {
-	d := utils.NewData(utils.Example, utils.Year2025)
-
-	expected := 4277556
-	actual := CalculateGrandTotal(d)
-
-	assert.Equal(t, expected, actual)
+	assert.Equal(t, 4277556, CalculateGrandTotal(ex2025))
 }
 
 func Test2025Day6B(t *testing.T) {
-	d := utils.NewData(utils.Challenge, utils.Year2025)
-
-	expected := 5595593539811
-	actual := CalculateGrandTotal(d)
-
-	assert.Equal(t, expected, actual)
+	assert.Equal(t, 5595593539811, CalculateGrandTotal(ch2025))
 }
 
 func Test2025Day6C(t *testing.T) {
-	d := utils.NewData(utils.Example, utils.Year2025)
-
-	expected := 3263827
-	actual := CalculateGrandTotal2(d)
-
-	assert.Equal(t, expected, actual)
+	assert.Equal(t, 3263827, CalculateGrandTotal2(ex2025))
 }
 
 func Test2025Day6D(t *testing.T) {
-	d := utils.NewData(utils.Challenge, utils.Year2025)
-
-	expected := 10153315705125
-	actual := CalculateGrandTotal2(d)
-
-	assert.Equal(t, expected, actual)
+	assert.Equal(t, 10153315705125, CalculateGrandTotal2(ch2025))
 }
