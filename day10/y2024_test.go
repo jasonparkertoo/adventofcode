@@ -4,42 +4,24 @@ import (
 	"testing"
 
 	"adventofcode.dev/utils"
-	. "adventofcode.dev/utils"
 	"github.com/stretchr/testify/assert"
 )
 
+var ex2024 = utils.NewData(utils.Example, utils.Year2024)
+var ch2024 = utils.NewData(utils.Challenge, utils.Year2024)
+
 func TestDay10A(t *testing.T) {
-	data := utils.NewData(utils.Example, utils.Year2024)
-
-	expected := 36
-	actual := TotalTrailheadScore(data)
-
-	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
+	assert.Equal(t, 36, TotalTrailheadScore(ex2024))
 }
 
 func TestDay10B(t *testing.T) {
-	data := utils.NewData(utils.Challenge, utils.Year2024)
-
-	expected := 776
-	actual := TotalTrailheadScore(data)
-
-	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
+	assert.Equal(t, 776, TotalTrailheadScore(ch2024))
 }
 
 func TestDay10C(t *testing.T) {
-	data := utils.NewData(utils.Example, utils.Year2024)
-
-	expected := 81
-	actual := TotalTrailheadRating(data)
-
-	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
+	assert.Equal(t, 81, TotalTrailheadRating(ex2024))
 }
 
 func TestDay10D(t *testing.T) {
-	data := utils.NewData(utils.Challenge, utils.Year2024)
-
-	expected := 1657
-	actual := TotalTrailheadRating(data)
-
-	assert.Equal(t, expected, actual, MsgExpected, expected, actual)
+	assert.Equal(t, 1657, TotalTrailheadRating(ch2024))
 }
