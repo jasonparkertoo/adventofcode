@@ -7,38 +7,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDay7A(t *testing.T) {
-	data := utils.NewData(utils.Example, utils.Year2024)
+var ex2024 = utils.NewData(utils.Example, utils.Year2024)
+var ch2024 = utils.NewData(utils.Challenge, utils.Year2024)
 
-	expected := 3749
-	actual := TotalCalibrationResult(data)
-
-	assert.Equal(t, expected, actual, utils.MsgExpected, expected, actual)
+func Test2024A(t *testing.T) {
+	assert.Equal(t, 3749, TotalCalibrationResult(ex2024))
 }
 
-func TestDay7B(t *testing.T) {
-	data := utils.NewData(utils.Challenge, utils.Year2024)
-
-	expected := 3598800864292
-	actual := TotalCalibrationResult(data)
-
-	assert.Equal(t, expected, actual, utils.MsgExpected, expected, actual)
+func Test2024B(t *testing.T) {
+	assert.Equal(t, 3598800864292, TotalCalibrationResult(ch2024))
 }
 
-func TestDay7C(t *testing.T) {
-	data := utils.NewData(utils.Example, utils.Year2024)
-
-	expected := 11387
-	actual := TotalCalibrationResultWithConcat(data)
-
-	assert.Equal(t, expected, actual, utils.MsgExpected, expected, actual)
+func Test2024C(t *testing.T) {
+	assert.Equal(t, 11387, TotalCalibrationResultWithConcat(ex2024))
 }
 
-func TestDay7D(t *testing.T) {
-	data := utils.NewData(utils.Challenge, utils.Year2024)
-	
-	expected := 340362529351427
-	actual := TotalCalibrationResultWithConcat(data)
-
-	assert.Equal(t, expected, actual, utils.MsgExpected, expected, actual)
+func Test2024D(t *testing.T) {
+	assert.Equal(t, 340362529351427, TotalCalibrationResultWithConcat(ch2024))
 }

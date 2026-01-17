@@ -7,38 +7,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test2025Day7A(t *testing.T) {
-	data := utils.NewData(utils.Example, utils.Year2025)
+var ex2025 = utils.NewData(utils.Example, utils.Year2025)
+var ch2025 = utils.NewData(utils.Challenge, utils.Year2025)
 
-	expected := 21
-	actual := CountBeamSplits(data)
-
-	assert.Equal(t, expected, actual)
+func Test2025A(t *testing.T) {
+	assert.Equal(t, 21, CountBeamSplits(ex2025))
 }
 
-func Test2025Day7B(t *testing.T) {
-	data := utils.NewData(utils.Challenge, utils.Year2025)
-
-	expected := 1533
-	actual := CountBeamSplits(data)
-
-	assert.Equal(t, expected, actual)
+func Test2025B(t *testing.T) {
+	assert.Equal(t, 1533, CountBeamSplits(ch2025))
 }
 
-func Test2025Day7C(t *testing.T) {
-	data := utils.NewData(utils.Example, utils.Year2025)
-
-	expected := 40
-	actual := NumberOfTachyonParticleTimelines(data)
-
-	assert.Equal(t, expected, actual)
+func Test2025C(t *testing.T) {
+	assert.Equal(t, 40, NumberOfTachyonParticleTimelines(ex2025))
 }
 
-func Test2025Day7D(t *testing.T) {
-	data := utils.NewData(utils.Challenge, utils.Year2025)
-
-	expected := 10733529153890
-	actual := NumberOfTachyonParticleTimelines(data)
-
-	assert.Equal(t, expected, actual)
+func Test2025D(t *testing.T) {
+	assert.Equal(t, 10733529153890, NumberOfTachyonParticleTimelines(ch2025))
 }
