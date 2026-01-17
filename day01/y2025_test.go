@@ -3,42 +3,33 @@ package day01
 import (
 	"testing"
 
-	. "adventofcode.dev/utils"
+	"adventofcode.dev/utils"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDayOnePartOneA(t *testing.T) {
-	data := NewData(Example, Year2025)
+var ex2025 = utils.NewData(utils.Example, utils.Year2025)
+var ch2025 = utils.NewData(utils.Challenge, utils.Year2025)
 
+func TestDayOnePartOneA(t *testing.T) {
 	expected := 3
-	actual := DoorPassword(data)[0]
-	
+	actual, _ := DoorPassword(ex2025)
 	assert.Equal(t, expected, actual)
 }
 
 func TestDayOnePartOneB(t *testing.T) {
-	data := NewData(Challenge, Year2025)
-
 	expected := 1195
-	actual := DoorPassword(data)[0]
-	
+	actual, _ := DoorPassword(ch2025)
 	assert.Equal(t, expected, actual)
 }
 
 func TestDayOnePartTwoA(t *testing.T) {
-	data := NewData(Example, Year2025)
-
-	expected := 6
-	actual := DoorPassword(data)[1]
-	
+	 expected := 6
+	 _, actual := DoorPassword(ex2025)
 	assert.Equal(t, expected, actual)
 }
 
 func TestDayOnePartTwoB(t *testing.T) {
-	data := NewData(Challenge, Year2025)
-
 	expected := 6770
-	actual := DoorPassword(data)[1]
-	
+	_, actual := DoorPassword(ch2025)
 	assert.Equal(t, expected, actual)
 }
