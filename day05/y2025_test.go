@@ -7,38 +7,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test2025Day5A(t *testing.T) {
-	d := utils.NewData(utils.Example, utils.Year2025)
-	
-	expected := 3
-	actual := CountFreshIds(d)
-	
-	assert.Equal(t, expected, actual, utils.MsgExpected, expected, actual)
+var ex2025 = utils.NewData(utils.Example, utils.Year2025)
+var ch2025 = utils.NewData(utils.Challenge, utils.Year2025)
+
+func Test2025A(t *testing.T) {
+	assert.Equal(t, 3, CountFreshIds(ex2025))
 }
 
-func Test2025Day5B(t *testing.T) {
-	d := utils.NewData(utils.Challenge, utils.Year2025)
-	
-	expected := 896
-	actual := CountFreshIds(d)
-	
-	assert.Equal(t, expected, actual, utils.MsgExpected, expected, actual)
+func Test2025B(t *testing.T) {
+	assert.Equal(t, 896, CountFreshIds(ch2025))
 }
 
-func Test2025Day5C(t *testing.T) {
-	d := utils.NewData(utils.Example, utils.Year2025)
-	
-	var expected int64 = 14
-	actual := NumberOfFreshRangeIds(d)
-	
-	assert.Equal(t, expected, actual, utils.MsgExpected, expected, actual)
+func Test2025C(t *testing.T) {
+	assert.Equal(t, int64(14), NumberOfFreshRangeIds(ex2025))
 }
 
-func Test2025Day5D(t *testing.T) {
-	d := utils.NewData(utils.Challenge, utils.Year2025)
-	
-	var expected int64 = 346240317247002
-	actual := NumberOfFreshRangeIds(d)
-	
-	assert.Equal(t, expected, actual, utils.MsgExpected, expected, actual)
+func Test2025D(t *testing.T) {
+	assert.Equal(t, int64(346240317247002), NumberOfFreshRangeIds(ch2025))
 }

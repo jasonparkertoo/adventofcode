@@ -13,6 +13,9 @@ type db struct {
 	ids    []int64
 }
 
+// DataTransformer parses raw input lines into a db structure that holds ranges and ids.
+// Lines before the first empty line are treated as ranges in the form "left-right".
+// After the empty line, each subsequent line is parsed as a single id number.
 func DataTransformer(lines []string) any {
 	d := &db{
 		ranges: [][]int64{},
@@ -38,6 +41,8 @@ func DataTransformer(lines []string) any {
 	return d
 }
 
+// MergeIntervals merges overlapping or contiguous ranges in the db.
+// The operation is performed in place and the updated db is returned.
 func MergeIntervals(d *db) *db {
 	// Sort the ranges by their start value.
 	sort.Slice(d.ranges, func(i, j int) bool {
@@ -63,6 +68,8 @@ func MergeIntervals(d *db) *db {
 	return d
 }
 
+// NumberOfFreshRangeIds returns the total count of ids that fall within the merged ranges.
+// It transforms the raw data, merges the intervals, and sums their lengths.
 func NumberOfFreshRangeIds(d *utils.Data) int64 {
 	data := MergeIntervals(d.TransformData(DataTransformer).(*db))
 	total := int64(0)
@@ -72,9 +79,11 @@ func NumberOfFreshRangeIds(d *utils.Data) int64 {
 	return total
 }
 
+// CountFreshIds counts how many ids in the input data are contained within any of the ranges.
+// The function performs no merging of ranges; it uses the raw ranges as provided.
 func CountFreshIds(d *utils.Data) int {
 	data := d.TransformData(DataTransformer).(*db)
-	
+
 	count := 0
 	for _, id := range data.ids {
 		for _, r := range data.ranges {
