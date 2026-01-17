@@ -7,38 +7,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDay8A(t *testing.T) {
-	data := utils.NewData(utils.Example, utils.Year2024)
+var ex2024 = utils.NewData(utils.Example, utils.Year2024)
+var ch2024 = utils.NewData(utils.Challenge, utils.Year2024)
 
-	expected := 14
-	actual := CountUniqueLocations(data)
-
-	assert.Equal(t, expected, actual)
+func Test2024A(t *testing.T) {
+	assert.Equal(t, 14, CountUniqueLocations(ex2024))
 }
 
-func TestDay8B(t *testing.T) {
-	data := utils.NewData(utils.Challenge, utils.Year2024)
-
-	expected := 261
-	actual := CountUniqueLocations(data)
-
-	assert.Equal(t, expected, actual)
+func Test2024B(t *testing.T) {
+	assert.Equal(t, 261, CountUniqueLocations(ch2024))
 }
 
-func TestDay8C(t *testing.T) {
-	data := utils.NewData(utils.Example, utils.Year2024)
-
-	expected := 34
-	actual := CountUniqueLocationsHarmonics(data)
-
-	assert.Equal(t, expected, actual)
+func Test2024C(t *testing.T) {
+	assert.Equal(t, 34, CountUniqueLocationsHarmonics(ex2024))
 }
 
-func TestDay8D(t *testing.T) {
-	data := utils.NewData(utils.Challenge, utils.Year2024)
-
-	expected := 988
-	actual := CountUniqueLocationsHarmonics(data)
-
-	assert.Equal(t, expected, actual)
+func Test2024D(t *testing.T) {
+	assert.Equal(t, 988, CountUniqueLocationsHarmonics(ch2024))
 }

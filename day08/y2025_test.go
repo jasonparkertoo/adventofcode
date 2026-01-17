@@ -7,38 +7,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test2025Day8A(t *testing.T) {
-	data := utils.NewData(utils.Example, utils.Year2025)
+var ex2025 = utils.NewData(utils.Example, utils.Year2025)
+var ch2025 = utils.NewData(utils.Challenge, utils.Year2025)
 
-	expected := 40
-	actual := ProductOfThreeLargestCircuits(data, 10)
-
-	assert.Equal(t, expected, actual)
+func Test2025A(t *testing.T) {
+	assert.Equal(t, 40, ProductOfThreeLargestCircuits(ex2025, 10))
 }
 
-func Test2025Day8B(t *testing.T) {
-	data := utils.NewData(utils.Challenge, utils.Year2025)
-
-	expected := 330786
-	actual := ProductOfThreeLargestCircuits(data, 1000)
-
-	assert.Equal(t, expected, actual)
+func Test2025B(t *testing.T) {
+	assert.Equal(t, 330786, ProductOfThreeLargestCircuits(ch2025, 1000))
 }
 
-func Test2025Day8C(t *testing.T) {
-	data := utils.NewData(utils.Example, utils.Year2025)
-
-	expected := 25272
-	actual := ProductOfLastConnectionX(data)
-
-	assert.Equal(t, expected, actual)
+func Test2025C(t *testing.T) {
+	assert.Equal(t, 25272, ProductOfLastConnectionX(ex2025))
 }
 
-func Test2025Day8D(t *testing.T) {
-	data := utils.NewData(utils.Challenge, utils.Year2025)
-
-	expected := 3276581616
-	actual := ProductOfLastConnectionX(data)
-
-	assert.Equal(t, expected, actual)
+func Test2025D(t *testing.T) {
+	assert.Equal(t, 3276581616, ProductOfLastConnectionX(ch2025))
 }
