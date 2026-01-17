@@ -11,9 +11,11 @@ type Puzzle struct {
 	letters [][]string
 }
 
+// ToPuzzle converts a utils.Data into a Puzzle by splitting each line into individual letters.
+// It ignores empty lines.
 func ToPuzzle(data *utils.Data) *Puzzle {
 	lines := data.Lines()
-	
+
 	var letters [][]string
 
 	for _, line := range lines {
@@ -30,6 +32,7 @@ func ToPuzzle(data *utils.Data) *Puzzle {
 
 type SearchFunction func(string, *Puzzle) int
 
+// compare returns 1 if curr and target are equal or reverse of each other, otherwise 0.
 func compare(curr []string, target []string) int {
 	l := make([]string, len(curr))
 	r := make([]string, len(curr))
@@ -48,10 +51,12 @@ func compare(curr []string, target []string) int {
 	return out
 }
 
+// toSlice converts a string to a slice of its uppercase characters.
 func toSlice(s string) []string {
 	return strings.Split(strings.ToUpper(s), "")
 }
 
+// SearchHorizontal counts the number of occurrences of w horizontally (left-to-right or right-to-left) in p.
 func SearchHorizontal(w string, p *Puzzle) int {
 	count := 0
 	target := toSlice(w)
@@ -64,6 +69,7 @@ func SearchHorizontal(w string, p *Puzzle) int {
 	return count
 }
 
+// SearchVertical counts the number of occurrences of w vertically (top-to-bottom or bottom-to-top) in p.
 func SearchVertical(w string, p *Puzzle) int {
 	count := 0
 	target := toSlice(w)
@@ -79,6 +85,7 @@ func SearchVertical(w string, p *Puzzle) int {
 	return count
 }
 
+// SearchLeftToRightDiagonal counts diagonal occurrences from top-left to bottom-right.
 func SearchLeftToRightDiagonal(w string, p *Puzzle) int {
 	count := 0
 	letters := toSlice(w)
@@ -94,6 +101,7 @@ func SearchLeftToRightDiagonal(w string, p *Puzzle) int {
 	return count
 }
 
+// SearchRightToLeftDiagonal counts diagonal occurrences from top-right to bottom-left.
 func SearchRightToLeftDiagonal(w string, p *Puzzle) int {
 	count := 0
 	letters := toSlice(w)
@@ -109,6 +117,7 @@ func SearchRightToLeftDiagonal(w string, p *Puzzle) int {
 	return count
 }
 
+// SearchXPattern counts X-shaped pattern occurrences of w in p.
 func SearchXPattern(w string, p *Puzzle) int {
 	letters := toSlice(w)
 
@@ -134,9 +143,10 @@ func SearchXPattern(w string, p *Puzzle) int {
 	return count
 }
 
+// Count counts horizontal, vertical, and both diagonal occurrences of w in the puzzle derived from d.
 func Count(w string, d *utils.Data) int {
 	p := ToPuzzle(d)
-	
+
 	count := 0
 	count += SearchHorizontal(w, p)
 	count += SearchVertical(w, p)
@@ -145,7 +155,7 @@ func Count(w string, d *utils.Data) int {
 	return count
 }
 
-
+// CountPattern counts occurrences using the supplied search function pt.
 func CountPattern(w string, d *utils.Data, pt func(string, *Puzzle) int) int {
 	p := ToPuzzle(d)
 	return pt(w, p)

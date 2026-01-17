@@ -6,6 +6,9 @@ import (
 
 const PaperRoll = "@"
 
+// CountAccessible counts the number of PaperRoll cells that are not surrounded by at least four other PaperRoll cells.
+// It iterates through the grid and uses the helper count to determine neighbor counts.
+// If the neighbor count is less than four, the cell is considered accessible.
 func CountAccessible(d *utils.Data) int {
 	grid := d.AsGrid()
 
@@ -24,6 +27,8 @@ func CountAccessible(d *utils.Data) int {
 	return numAccessible
 }
 
+// count returns the number of adjacent PaperRoll cells around the specified row and column.
+// It checks all eight neighboring positions and counts those that contain a PaperRoll symbol.
 func count(row, column int, grid [][]string) int {
 	count := 0
 
@@ -40,7 +45,7 @@ func count(row, column int, grid [][]string) int {
 		newCol := column + dir.dCol
 		// check for out of bounds condition and values that are not PaperRoll
 		if newRow < 0 || newRow >= len(grid) || newCol < 0 || newCol >= len(grid[row]) || PaperRoll != grid[newRow][newCol] {
-			continue	
+			continue
 		}
 		count++
 	}
@@ -48,6 +53,9 @@ func count(row, column int, grid [][]string) int {
 	return count
 }
 
+// CountRemovable removes all PaperRoll cells that are not surrounded by at least four other PaperRoll cells,
+// iteratively applying the removal until no more cells qualify.
+// It returns the total number of cells removed.
 func CountRemovable(d *utils.Data) int {
 	grid := d.AsGrid()
 	removed := 0
