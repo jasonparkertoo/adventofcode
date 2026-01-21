@@ -1,3 +1,5 @@
+// Package utils provides utility functions for reading and processing input data
+// for Advent of Code solutions.
 package utils
 
 import (
@@ -9,7 +11,9 @@ import (
 )
 
 const (
-	MsgPanic    string = "unable to find input data"
+	// MsgPanic is the error message used when input data cannot be found
+	MsgPanic string = "unable to find input data"
+	// MsgExpected is the error message format used for expected vs actual value mismatches
 	MsgExpected string = "expected %d, got %d"
 )
 
@@ -17,12 +21,16 @@ const (
 type DataSet string
 
 const (
-	Example   DataSet = "example"
+	// Example represents the example input data
+	Example DataSet = "example"
+	// Challenge represents the challenge input data
 	Challenge DataSet = "challenge"
 )
 
 const (
+	// Year2024 represents the 2024 Advent of Code year
 	Year2024 string = "2024"
+	// Year2025 represents the 2025 Advent of Code year
 	Year2025 string = "2025"
 )
 
@@ -33,23 +41,18 @@ const dataDelimiter = "-BREAK-"
 // If the dataset is Example, lines are read until the data delimiter.
 // If the dataset is Challenge, lines after the data delimiter are returned.
 func ReadLines(y string, ds DataSet) ([]string, error) {
-	cwd, _ := os.Getwd()
+	cwd, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get working directory: %w", err)
+	}
 	file := filepath.Join(cwd, y)
 
 	f, err := os.Open(file)
 	if err != nil {
-		panic(err.Error())
+		return nil, fmt.Errorf("failed to open file %s: %w", file, err)
 	}
 
-	defer func(f *os.File) {
-		err := f.Close()
-		if err != nil {
-			panic(err)
-		}
-	}(f)
-
 	sc := bufio.NewScanner(f)
-
 	var lines []string
 	pastDelimiter := false
 	for sc.Scan() {
@@ -72,6 +75,16 @@ func ReadLines(y string, ds DataSet) ([]string, error) {
 			lines = append(lines, line)
 		}
 	}
+
+	if err := sc.Err(); err != nil {
+		return nil, fmt.Errorf("failed to read file %s: %w", file, err)
+	}
+
+	err = f.Close()
+	if err != nil {
+		return nil, fmt.Errorf("failed to close file %s: %w", file, err)
+	}
+
 	return lines, nil
 }
 
@@ -81,12 +94,12 @@ type Data struct {
 }
 
 // NewData creates a Data instance for the given dataset and year by reading the appropriate file.
-func NewData(ds DataSet, y string) *Data {
-	if lines, err := ReadLines(y, ds); err != nil {
-		panic(err)
-	} else {
-		return &Data{lines}
+func NewData(ds DataSet, y string) (*Data, error) {
+	lines, err := ReadLines(y, ds)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read lines: %w", err)
 	}
+	return &Data{lines}, nil
 }
 
 // Lines returns all input lines as a slice of strings.
@@ -94,10 +107,10 @@ func (d Data) Lines() []string {
 	return d.lines
 }
 
-// Line returns the requested line (1‑based) or an error if the index is out of range.
+// Line returns the requested line (1-based) or an error if the index is out of range.
 func (d Data) Line(n int) (string, error) {
-	if n < len(d.lines) || n < 1 {
-		return "", fmt.Errorf("invalid line number requested: %d", n)
+	if n > len(d.lines) || n < 1 {
+		return "", fmt.Errorf("invalid line number requested: %d, expected 1 to %d", n, len(d.lines))
 	}
 	return d.lines[n-1], nil
 }
@@ -107,7 +120,7 @@ func (d Data) TransformData(fn func([]string) any) any {
 	return fn(d.lines)
 }
 
-// AsGrid converts the data into a two‑dimensional slice of single‑character strings.
+// AsGrid converts the data into a two-dimensional slice of single-character strings.
 func (d Data) AsGrid() (out [][]string) {
 	for _, row := range d.lines {
 		out = append(out, strings.Split(row, ""))
