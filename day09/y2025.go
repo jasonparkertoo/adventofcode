@@ -1,9 +1,12 @@
 package day09
 
 import (
+	"runtime"
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
+	"sync/atomic"
 
 	"adventofcode.dev/utils"
 )
@@ -68,38 +71,6 @@ func findLargestRectangle(d *utils.Data) int {
 			maxArea = maxInt(maxArea, area)
 		}
 	}
-	return maxArea
-}
-
-// findLargestRectangleOfAny computes the largest rectangle
-// that can be formed with red tiles as opposite corners,
-// but the rectangle may only contain tiles that are
-// red or green. The green tiles are the straight lines
-// between consecutive red tiles and all interior tiles
-// inside that loop.
-func findLargestRectangleOfAny(d *utils.Data) int {
-	points := d.TransformData(dataTransformer).([]point)
-	if len(points) < 2 {
-		return 0
-	}
-
-	minRow, maxRow, minCol, maxCol := boundingBox(points)
-	rowRanges := buildRowRanges(points, minRow, maxRow, minCol, maxCol)
-
-	maxArea := 0
-	for i := range points {
-		for j := i + 1; j < len(points); j++ {
-			p1, p2 := points[i], points[j]
-			area := rectangleArea(p1, p2)
-			if area <= maxArea {
-				continue
-			}
-			if rectangleIsValid(p1, p2, rowRanges) {
-				maxArea = area
-			}
-		}
-	}
-
 	return maxArea
 }
 
@@ -346,4 +317,126 @@ func uniqueInts(xs []int) []int {
 		}
 	}
 	return out
+}
+
+// findLargestRectangleOfAny - concurrent version for maximum speed
+func findLargestRectangleOfAny(d *utils.Data) int {
+	points := d.TransformData(dataTransformer).([]point)
+	if len(points) < 2 {
+		return 0
+	}
+
+	minRow, maxRow, minCol, maxCol := boundingBox(points)
+	rowRanges := buildRowRanges(points, minRow, maxRow, minCol, maxCol)
+
+	// Create candidate pairs sorted by area (descending)
+	type candidate struct {
+		i, j int
+		area int
+	}
+	
+	candidates := make([]candidate, 0, len(points)*(len(points)-1)/2)
+	for i := 0; i < len(points)-1; i++ {
+		for j := i + 1; j < len(points); j++ {
+			area := rectangleArea(points[i], points[j])
+			candidates = append(candidates, candidate{i, j, area})
+		}
+	}
+	
+	// Sort by area descending
+	sort.Slice(candidates, func(i, j int) bool {
+		return candidates[i].area > candidates[j].area
+	})
+	
+	// Process candidates concurrently
+	numWorkers := runtime.GOMAXPROCS(0)
+	var maxArea atomic.Int64
+	var wg sync.WaitGroup
+	
+	// Work queue with early termination
+	chunkSize := 1000 // Process in chunks for better early termination
+	
+	for start := 0; start < len(candidates); start += chunkSize {
+		end := start + chunkSize
+		if end > len(candidates) {
+			end = len(candidates)
+		}
+		
+		chunk := candidates[start:end]
+		
+		// Early termination: if best in chunk can't beat current max, skip rest
+		if chunk[0].area <= int(maxArea.Load()) {
+			break
+		}
+		
+		wg.Add(numWorkers)
+		
+		for w := 0; w < numWorkers; w++ {
+			workerID := w
+			go func() {
+				defer wg.Done()
+				
+				// Each worker processes every Nth item in the chunk
+				for i := workerID; i < len(chunk); i += numWorkers {
+					c := chunk[i]
+					
+					// Check if we can still improve
+					currentMax := int(maxArea.Load())
+					if c.area <= currentMax {
+						continue
+					}
+					
+					p1, p2 := points[c.i], points[c.j]
+					
+					if rectangleIsValidFast(p1, p2, rowRanges) {
+						// Update max atomically
+						for {
+							currentMax = int(maxArea.Load())
+							if c.area <= currentMax {
+								break
+							}
+							if maxArea.CompareAndSwap(int64(currentMax), int64(c.area)) {
+								break
+							}
+						}
+					}
+				}
+			}()
+		}
+		
+		wg.Wait()
+	}
+
+	return int(maxArea.Load())
+}
+
+// rectangleIsValidFast - optimized validation (concurrent-safe, read-only)
+func rectangleIsValidFast(p1, p2 point, rows map[int][][2]int) bool {
+	top := min(p1.row, p2.row)
+	bot := max(p1.row, p2.row)
+	left := min(p1.col, p2.col)
+	right := max(p1.col, p2.col)
+
+	for r := top; r <= bot; r++ {
+		ints, ok := rows[r]
+		if !ok {
+			return false
+		}
+
+		// Binary search
+		lo, hi := 0, len(ints)
+		for lo < hi {
+			mid := (lo + hi) >> 1
+			if ints[mid][1] < left {
+				lo = mid + 1
+			} else {
+				hi = mid
+			}
+		}
+		
+		if lo >= len(ints) || ints[lo][0] > left || ints[lo][1] < right {
+			return false
+		}
+	}
+	return true
 }
