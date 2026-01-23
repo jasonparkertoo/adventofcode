@@ -26,3 +26,13 @@ func TestB(t *testing.T) {
 	
 	assert.Equal(t, expected, actual)
 }
+
+func TestC(t *testing.T) {
+	ex2024, err := utils.NewData(utils.Challenge, utils.Year2025)
+	assert.NoError(t, err)
+	
+	expected := 462444153119850
+	actual := NumberOfDifferentPathsWithBoth(ex2024)
+	
+	assert.Equal(t, expected, actual)
+}

@@ -80,3 +80,68 @@ func countPaths(graph map[string][]string, current, target string) int {
 
 	return totalPaths
 }
+
+// NumberOfDifferentPathsWithBoth counts all distinct paths from "svr" to "out"
+// that visit both "dac" and "fft" (in any order). It uses a memoized depth‑first
+// traversal of the graph built from the input data.
+func NumberOfDifferentPathsWithBoth(d *utils.Data) int {
+	// Build graph
+	graph := make(map[string][]string)
+	for _, line := range d.Lines() {
+		if line == "" {
+			continue
+		}
+		parts := strings.Split(line, ": ")
+		device := parts[0]
+		outputs := strings.Split(parts[1], " ")
+		graph[device] = outputs
+	}
+
+	// Memoization map: key is [current, seenDAC, seenFFT] as array
+	memo := make(map[[3]any]int)
+	return countPathsWithBothMemo(graph, "svr", false, false, memo)
+}
+
+// countPathsWithBothMemo recursively counts paths from current to out, tracking whether
+// the path has encountered dac and fft, with memoization.
+func countPathsWithBothMemo(graph map[string][]string, current string, seenDAC, seenFFT bool, memo map[[3]interface{}]int) int {
+	// Create key for memoization
+	key := [3]any{current, seenDAC, seenFFT}
+
+	// Check if result is already computed
+	if result, exists := memo[key]; exists {
+		return result
+	}
+
+	// Update flags if current node is one of the required nodes.
+	if current == "dac" {
+		seenDAC = true
+	}
+	if current == "fft" {
+		seenFFT = true
+	}
+
+	// If we've reached the target, check flags.
+	if current == "out" {
+		if seenDAC && seenFFT {
+			memo[key] = 1
+			return 1
+		}
+		memo[key] = 0
+		return 0
+	}
+
+	outputs, exists := graph[current]
+	if !exists || len(outputs) == 0 {
+		memo[key] = 0
+		return 0
+	}
+
+	total := 0
+	for _, next := range outputs {
+		total += countPathsWithBothMemo(graph, next, seenDAC, seenFFT, memo)
+	}
+
+	memo[key] = total
+	return total
+}
