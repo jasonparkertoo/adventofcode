@@ -98,32 +98,36 @@ func NumberOfDifferentPathsWithBoth(d *utils.Data) int {
 	}
 
 	// Memoization map: key is [current, seenDAC, seenFFT] as array
-	memo := make(map[[3]any]int)
-	return countPathsWithBothMemo(graph, "svr", false, false, memo)
+	memo := make(map[MemoKey]int)
+	initialKey := MemoKey{"svr", false, false}
+	return countPathsWithBothMemo(graph, initialKey, memo)
+}
+
+type MemoKey struct {
+	Current string
+	SeenDAC bool
+	SeenFFT bool
 }
 
 // countPathsWithBothMemo recursively counts paths from current to out, tracking whether
 // the path has encountered dac and fft, with memoization.
-func countPathsWithBothMemo(graph map[string][]string, current string, seenDAC, seenFFT bool, memo map[[3]interface{}]int) int {
-	// Create key for memoization
-	key := [3]any{current, seenDAC, seenFFT}
-
+func countPathsWithBothMemo(graph map[string][]string, key MemoKey, memo map[MemoKey]int) int {
 	// Check if result is already computed
 	if result, exists := memo[key]; exists {
 		return result
 	}
 
 	// Update flags if current node is one of the required nodes.
-	if current == "dac" {
-		seenDAC = true
+	if key.Current == "dac" {
+		key.SeenDAC = true
 	}
-	if current == "fft" {
-		seenFFT = true
+	if key.Current == "fft" {
+		key.SeenFFT = true
 	}
 
 	// If we've reached the target, check flags.
-	if current == "out" {
-		if seenDAC && seenFFT {
+	if key.Current == "out" {
+		if key.SeenDAC && key.SeenFFT {
 			memo[key] = 1
 			return 1
 		}
@@ -131,7 +135,7 @@ func countPathsWithBothMemo(graph map[string][]string, current string, seenDAC, 
 		return 0
 	}
 
-	outputs, exists := graph[current]
+	outputs, exists := graph[key.Current]
 	if !exists || len(outputs) == 0 {
 		memo[key] = 0
 		return 0
@@ -139,7 +143,8 @@ func countPathsWithBothMemo(graph map[string][]string, current string, seenDAC, 
 
 	total := 0
 	for _, next := range outputs {
-		total += countPathsWithBothMemo(graph, next, seenDAC, seenFFT, memo)
+		nextKey := MemoKey{next, key.SeenDAC, key.SeenFFT}
+		total += countPathsWithBothMemo(graph, nextKey, memo)
 	}
 
 	memo[key] = total
