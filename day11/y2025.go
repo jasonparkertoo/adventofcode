@@ -2,27 +2,11 @@ package day11
 
 import (
 	"bufio"
+	"fmt"
 	"strings"
 
 	"adventofcode.dev/utils"
 )
-
-func dataTransformer(lines []string) any {
-	graph := make(map[string][]string)
-	for _, line := range lines {
-		if line == "" {
-			continue
-		}
-
-		parts := strings.Split(line, ": ")
-		device := parts[0]
-		outputs := strings.Split(parts[1], " ")
-
-		graph[device] = outputs
-	}
-
-	return graph
-}
 
 func NumberOfDifferentPaths(d *utils.Data) int {
 	// Join all lines into one input string
@@ -144,7 +128,9 @@ func countPathsWithBothMemo(graph map[string][]string, key MemoKey, memo map[Mem
 	total := 0
 	for _, next := range outputs {
 		nextKey := MemoKey{next, key.SeenDAC, key.SeenFFT}
-		total += countPathsWithBothMemo(graph, nextKey, memo)
+		t := countPathsWithBothMemo(graph, nextKey, memo)
+		fmt.Println(t)
+		total += t
 	}
 
 	memo[key] = total
