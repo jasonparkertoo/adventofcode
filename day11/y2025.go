@@ -2,7 +2,6 @@ package day11
 
 import (
 	"bufio"
-	"fmt"
 	"strings"
 
 	"adventofcode.dev/utils"
@@ -128,9 +127,7 @@ func countPathsWithBothMemo(graph map[string][]string, key MemoKey, memo map[Mem
 	total := 0
 	for _, next := range outputs {
 		nextKey := MemoKey{next, key.SeenDAC, key.SeenFFT}
-		t := countPathsWithBothMemo(graph, nextKey, memo)
-		fmt.Println(t)
-		total += t
+		total += countPathsWithBothMemo(graph, nextKey, memo)
 	}
 
 	memo[key] = total
